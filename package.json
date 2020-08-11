@@ -1,0 +1,17 @@
+{
+    "name": "istio-workshop",
+    "version": "1.0.0",
+    "description": "Istio Workshop by Bluetab Cloud Practice.",
+    "main": "index.js",
+    "author": "samdbeckham",
+    "license": "MIT",
+    "private": false,
+    "scripts": {
+        "start": "vuepress dev docs",
+        "build": "vuepress build docs"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "vuepress": "^0.10.0"
+    }
+}
