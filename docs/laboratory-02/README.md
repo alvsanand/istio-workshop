@@ -1,53 +1,164 @@
 # Laboratory 2 - Installing Istio
 
-Before beginning with the practice labs, it is is very advisable to explain a brief technical overview of Istio.
+In the second laboratory of the workshop, we will install and configure Istio as in its [getting-started](https://istio.io/latest/docs/setup/getting-started/) tutorial.
 
-> Most of this content is taken directly from the official Istio documentation.
+## 1. Download Istio
 
-## What is Istio?
+1. Execute Istio downloader:
 
-At a high level, Istio helps reduce the complexity of these deployments, and eases the strain on your development teams. It is a completely open source service mesh that layers transparently onto existing distributed applications. It is also a platform, including APIs that let it integrate into any logging platform, or telemetry or policy system. Istio’s diverse feature set lets you successfully, and efficiently, run a distributed microservice architecture, and provides a uniform way to secure, connect, and monitor microservices.
+    ```shell
+    curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.6.8 sh -
+    ```
 
-## What is a service mesh?
+1. Move to the Istio package directory:
 
-Istio addresses the challenges developers and operators face as monolithic applications transition towards a distributed microservice architecture. To see how, it helps to take a more detailed look at Istio’s service mesh.
+    ```shell
+    cd istio-1.6.8
+    ```
 
-The term service mesh is used to describe the network of microservices that make up such applications and the interactions between them. As a service mesh grows in size and complexity, it can become harder to understand and manage. Its requirements can include discovery, load balancing, failure recovery, metrics, and monitoring. A service mesh also often has more complex operational requirements, like A/B testing, canary rollouts, rate limiting, access control, and end-to-end authentication.
+1. Add the `istioctl` client to your path (Linux or macOS):
 
-Istio provides behavioral insights and operational control over the service mesh as a whole, offering a complete solution to satisfy the diverse requirements of microservice applications.
+    ```shell
+    export PATH=$PWD/bin:$PATH
+    ```
 
-![Example Service Mesh Architecture](https://www.nginx.com/wp-content/uploads/2019/02/service-mesh-generic-topology_social.png)
+## 2. Install Istio in Minikube
 
-## Why use Istio?
+1. For this installation, we use the `demo` [configuration profile](https://istio.io/latestdocs/setup/additional-setup/config-profiles/).
 
-Istio makes it easy to create a network of deployed services with load balancing, service-to-service authentication, monitoring, and more, with few or no code changes in service code. You add Istio support to services by deploying a special sidecar proxy throughout your environment that intercepts all network communication between microservices, then configure and manage Istio using its control plane functionality, which includes:
+    ```shell
+    istioctl install --set profile=demo
+    ```
 
-- Automatic load balancing for HTTP, gRPC, WebSocket, and TCP traffic.
-- Fine-grained control of traffic behavior with rich routing rules, retries, failovers, and fault injection.
-- A pluggable policy layer and configuration API supporting access controls, rate limits and quotas.
-- Automatic metrics, logs, and traces for all traffic within a cluster, including cluster ingress and egress.
-- Secure service-to-service communication in a cluster with strong identity-based authentication and authorization.
+1. Add a namespace label to instruct Istio to automatically inject Envoy sidecar proxies when you deploy your application later:
 
-![Istio Architecture](https://istio.io/latest/docs/ops/deployment/architecture/arch.svg)
+    ```shell
+    kubectl label namespace default istio-injection=enabled
+    ```
 
-## Core features
+## 3. Deploy a sample application
 
-Istio most key capabilities are:
+1. Deploy the [Bookinfo sample application](https://istio.io/latest/docs/examples/bookinfo/):
 
-### Traffic management
+    ```shell
+    kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml
+    ```
 
-Istio’s easy rules configuration and traffic routing lets you control the flow of traffic and API calls between services. Istio simplifies configuration of service-level properties like circuit breakers, timeouts, and retries, and makes it a breeze to set up important tasks like A/B testing, canary rollouts, and staged rollouts with percentage-based traffic splits.
+1. The application will start. As each pod becomes ready, the Istio sidecar will deploy along with it.
 
-With better visibility into your traffic, and out-of-box failure recovery features, you can catch issues before they cause problems, making calls more reliable, and your network more robust – no matter what conditions you face.
+    ```shell
+    kubectl get services
+    ```
 
-### Security
+    and
 
-Istio’s security capabilities free developers to focus on security at the application level. Istio provides the underlying secure communication channel, and manages authentication, authorization, and encryption of service communication at scale. With Istio, service communications are secured by default, letting you enforce policies consistently across diverse protocols and runtimes – all with little or no application changes.
+    ```shell
+    kubectl get pods
+    ```
 
-While Istio is platform independent, using it with Kubernetes (or infrastructure) network policies, the benefits are even greater, including the ability to secure pod-to-pod or service-to-service communication at the network and application layers.
+1. Verify everything is working correctly up to this point. Run this command to see if the app is running inside the cluster and serving HTML pages by     checking for the page title in the response:
 
-### Observability
+    ```shell
+    kubectl exec "$(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}')" -c ratings -- curl -s productpage:9080/productpage | grep -o "<title>.*</title>"
+    ```
 
-Istio’s robust tracing, monitoring, and logging features give you deep insights into your service mesh deployment. Gain a real understanding of how service performance impacts things upstream and downstream with Istio’s monitoring features, while its custom dashboards provide visibility into the performance of all your services and let you see how that performance is affecting your other processes.
+### 3.1 Open sample application to outside traffic
 
-All these features let you more effectively set, monitor, and enforce SLOs on services. Of course, the bottom line is that you can detect and fix issues quickly and efficiently.
+The Bookinfo application is deployed but not accessible from the outside. To make it accessible, you need to create an [Istio Ingress Gateway](https://istio.io/latestdocs/concepts/traffic-management/#gateways), which maps a path to a route at the edge of your mesh.
+
+1. Associate this application with the Istio gateway:
+
+    ```shell
+    kubectl apply -f samples/bookinfo/networking/bookinfo-gateway.yaml
+    ```
+
+1. Ensure that there are no issues with the configuration:
+
+    ```shell
+    istioctl analyze
+    ```
+
+### 3.2 Determining the ingress IP and ports
+
+Follow these instructions to set the `INGRESS_HOST` and `INGRESS_PORT` variables for accessing the gateway. Use the tabs to choose the instructions for your chosen platform:
+
+Set the ingress ports:
+
+```shell
+export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(.name=="http2")].nodePort}')
+export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(.name=="https")].nodePort}')
+```
+
+Ensure a port was successfully assigned to each environment variable:
+
+```shell
+echo "$INGRESS_PORT"
+```
+
+```shell
+echo "$SECURE_INGRESS_PORT"
+```
+
+Set the ingress IP:
+
+```shell
+export INGRESS_HOST=$(minikube ip)
+```
+
+Ensure an IP address was successfully assigned to the environment variable:
+
+```shell
+echo "$INGRESS_HOST"
+```
+
+Run this command in a new terminal window to start a Minikube tunnel that sends traffic to your Istio Ingress Gateway:
+
+```shell
+minikube tunnel
+```
+
+1. Set `GATEWAY_URL`:
+
+    ```shell
+    export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
+    ```
+
+1. Ensure an IP address and port were successfully assigned to the environment variable:
+
+    ```shell
+    echo "$GATEWAY_URL"
+    ```
+
+### 3.3 Verify external access
+
+Confirm that the Bookinfo application is accessible from outside by viewing the Bookinfo product page using a browser.
+
+1. Run the following command to retrieve the external address of the Bookinfo application.
+
+    ```shell
+    echo http://"$GATEWAY_URL/productpage"
+    ```
+
+1. Paste the output from the previous command into your web browser and confirm that the Bookinfo product page is displayed.
+
+## 4. View the dashboard
+
+Istio has several optional dashboards installed by the demo installation. The [Kiali](https://kiali.io/) dashboard helps you understand the structure of your service mesh by displaying the topology and indicates the health of your mesh.
+
+1. Access the Kiali dashboard. The default user name is `admin` and default password is `admin`.
+
+    ```shell
+     istioctl dashboard kiali
+    ```
+
+1. Access the Kiali dashboard.
+
+    ```shell
+    istioctl dashboard kiali
+    ```
+
+1. In the left navigation menu, select _Graph_ and in the _Namespace_ drop down, select _default_.
+
+    The Kiali dashboard shows an overview of your mesh with the relationships between the services in the `Bookinfo` sample application. It also provides filters to visualize the traffic flow.
+
+    ![Kiali Dashboard](https://istio.io/latest/docs/setup/getting-started/kiali-example2.png)

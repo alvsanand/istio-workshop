@@ -4,8 +4,8 @@ The first laboratory of the workshop consist of launching a Kubernetes cluster i
 
 ## Requirements
 
-- 2 CPUs or more
-- 2GB of free memory
+- 4 CPUs or more
+- 12GB of free memory
 - 20GB of free disk space
 - Internet connection
 - Container or virtual machine manager, such as: [Docker](https://docs.docker.com/engine/install/).
@@ -17,8 +17,8 @@ For Linux users, they provide 3 easy download options:
 ### Linux
 
 ```shell
- curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
- sudo install minikube-linux-amd64 /usr/local/bin/minikube
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
 ```
 
 ### MacOs
@@ -58,14 +58,15 @@ Otherwise, download and run the [Windows installer](https://storage.googleapis.c
 From a terminal with administrator access (but not logged in as root), run:
 
 ```shell
-minikube start
+minikube start --cpus 4 --memory 12288
 ```
 
-#Istio# 3. Using your K8s
+## 3. Using your K8s
 
 If you already have kubectl installed, you can now use it to access your shiny new cluster:
 
 ```shell
+kubectl config use-context minikube
 kubectl get po -A
 ```
 
@@ -124,7 +125,7 @@ minikube delete --all
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 ```
 
-## 7. Installing an Example Chart
+## 7. Installing an simple Chart
 
 - Install a MySQL server:
 
