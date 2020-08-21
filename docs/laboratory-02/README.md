@@ -2,7 +2,14 @@
 
 In the second laboratory of the workshop, we will install and configure Istio as in its [getting-started](https://istio.io/latest/docs/setup/getting-started/) tutorial.
 
-## 1. Download Istio
+We will perform the following task:
+
+1. Download Istio in your laptop.
+1. Install in your Minikube cluster.
+1. Deploy a sample application.
+1. Use a dashboard for Istio.
+
+## 1. Downloading Istio
 
 1. Execute Istio downloader:
 
@@ -22,7 +29,7 @@ In the second laboratory of the workshop, we will install and configure Istio as
     export PATH=$PWD/bin:$PATH
     ```
 
-## 2. Install Istio in Minikube
+## 2. Installing Istio in Minikube
 
 1. For this installation, we use the `demo` [configuration profile](https://istio.io/latestdocs/setup/additional-setup/config-profiles/).
 
@@ -30,13 +37,13 @@ In the second laboratory of the workshop, we will install and configure Istio as
     istioctl install --set profile=demo
     ```
 
-1. Add a namespace label to instruct Istio to automatically inject Envoy sidecar proxies when you deploy your application later:
+1. (Optional) Add a namespace label to instruct Istio to automatically inject Envoy sidecar proxies when you deploy your application later:
 
     ```shell
     kubectl label namespace default istio-injection=enabled
     ```
 
-## 3. Deploy a sample application
+## 3. Deploying a sample application
 
 1. Deploy the [Bookinfo sample application](https://istio.io/latest/docs/examples/bookinfo/):
 
@@ -62,7 +69,7 @@ In the second laboratory of the workshop, we will install and configure Istio as
     kubectl exec "$(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}')" -c ratings -- curl -s productpage:9080/productpage | grep -o "<title>.*</title>"
     ```
 
-### 3.1 Open sample application to outside traffic
+### 3.1 Opening sample application to outside traffic
 
 The Bookinfo application is deployed but not accessible from the outside. To make it accessible, you need to create an [Istio Ingress Gateway](https://istio.io/latestdocs/concepts/traffic-management/#gateways), which maps a path to a route at the edge of your mesh.
 
@@ -82,56 +89,46 @@ The Bookinfo application is deployed but not accessible from the outside. To mak
 
 Follow these instructions to set the `INGRESS_HOST` and `INGRESS_PORT` variables for accessing the gateway. Use the tabs to choose the instructions for your chosen platform:
 
-Set the ingress ports:
+1. Set the ingress ports:
 
-```shell
-export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(.name=="http2")].nodePort}')
-export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(.name=="https")].nodePort}')
-```
+    ```shell
+    export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(.name=="http2")].nodePort}')
+    export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(.name=="https")].nodePort}')
+    ```
 
-Ensure a port was successfully assigned to each environment variable:
+1. Ensure a port was successfully assigned to each environment variable:
 
-```shell
-echo "$INGRESS_PORT"
-```
+    ```shell
+    echo "$INGRESS_PORT"
+    ```
 
-```shell
-echo "$SECURE_INGRESS_PORT"
-```
+    ```shell
+    echo "$SECURE_INGRESS_PORT"
+    ```
 
-Set the ingress IP:
+1. Set the ingress IP:
 
-```shell
-export INGRESS_HOST=$(minikube ip)
-```
+    ```shell
+    export INGRESS_HOST=$(minikube ip)
+    ```
 
-Ensure an IP address was successfully assigned to the environment variable:
+1. Ensure an IP address was successfully assigned to the environment variable:
 
-```shell
-echo "$INGRESS_HOST"
-```
+    ```shell
+    echo "$INGRESS_HOST"
+    ```
 
-Run this command in a new terminal window to start a Minikube tunnel that sends traffic to your Istio Ingress Gateway:
+1. Run this command in a new terminal window to start a Minikube tunnel that sends traffic to your Istio Ingress Gateway:
 
-```shell
-minikube tunnel
-```
+    ```shell
+    minikube tunnel
+    ```
 
 1. Set `GATEWAY_URL`:
 
     ```shell
-    export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
+    export GATEWAY_URL=$INGRESS_HOST:$SECURE_INGRESS_PORT
     ```
-
-1. Ensure an IP address and port were successfully assigned to the environment variable:
-
-    ```shell
-    echo "$GATEWAY_URL"
-    ```
-
-### 3.3 Verify external access
-
-Confirm that the Bookinfo application is accessible from outside by viewing the Bookinfo product page using a browser.
 
 1. Run the following command to retrieve the external address of the Bookinfo application.
 
@@ -141,17 +138,11 @@ Confirm that the Bookinfo application is accessible from outside by viewing the 
 
 1. Paste the output from the previous command into your web browser and confirm that the Bookinfo product page is displayed.
 
-## 4. View the dashboard
+## 4. Managing Istio using a dashboard
 
 Istio has several optional dashboards installed by the demo installation. The [Kiali](https://kiali.io/) dashboard helps you understand the structure of your service mesh by displaying the topology and indicates the health of your mesh.
 
 1. Access the Kiali dashboard. The default user name is `admin` and default password is `admin`.
-
-    ```shell
-     istioctl dashboard kiali
-    ```
-
-1. Access the Kiali dashboard.
 
     ```shell
     istioctl dashboard kiali

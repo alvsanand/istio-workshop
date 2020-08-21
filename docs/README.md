@@ -15,7 +15,7 @@ Through this workshop you will be able to learn:
 ## Index
 
 - [Technical Overview](/technical_overview/)
-- [Laboratory 1 - Installing K8s](/laboratory-01/)
+- [Laboratory 1 - Installing Minkube](/laboratory-01/)
 - [Laboratory 2 - Installing Istio](/laboratory-02/)
 - [Laboratory 3 - Integrating an application](/laboratory-003/)
 - [Istio Technical Overview](/laboratory-004/)

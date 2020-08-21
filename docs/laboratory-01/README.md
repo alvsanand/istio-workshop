@@ -1,18 +1,25 @@
-# Laboratory 1 - Installing K8s
+# Laboratory 1 - Installing Minkube
 
 The first laboratory of the workshop consist of launching a Kubernetes cluster in our local machine. In order to achieve that, we will use [minikube](https://kubernetes.io/docs/tutorials/hello-minikube/) that eases a lot this task.
 
-## Requirements
+We will perform the following task:
 
-- 4 CPUs or more
-- 12GB of free memory
-- 20GB of free disk space
+1. Install and run a Minikube cluster in your laptop.
+1. Use `kubectl` while deploying a sample application.
+1. Deploy a sample application.
+1. Install and use Helm.
+
+### Requirements
+
+- 2 CPUs or more
+- 8GB of free memory
+- 40GB of free disk space
 - Internet connection
 - Container or virtual machine manager, such as: [Docker](https://docs.docker.com/engine/install/).
 
-## 1. Installation
+## 1. Installing Minikube
 
-For Linux users, they provide 3 easy download options:
+Depending of your OS, you will have different options for installing Minilube.
 
 ### Linux
 
@@ -53,15 +60,15 @@ choco install minikube
 
 Otherwise, download and run the [Windows installer](https://storage.googleapis.com/minikube/releases/latest/minikube-installer.exe)
 
-## 2. Starting minikube cluster
+## 2. Starting the cluster
 
 From a terminal with administrator access (but not logged in as root), run:
 
 ```shell
-minikube start --cpus 4 --memory 12288
+minikube start --cpus 2 --memory 8192 --disk-size 40g
 ```
 
-## 3. Using your K8s
+## 3. Interacting with K8s
 
 If you already have kubectl installed, you can now use it to access your shiny new cluster:
 
@@ -111,7 +118,7 @@ kubectl port-forward service/hello-minikube 7080:8080
 
 Now, the application is available at [http://localhost:7080/](http://localhost:7080/)
 
-## 5. Delete minikube cluster
+## 5. Deleting minikube cluster
 
 > For now, we will not execute this command.
 
@@ -125,9 +132,9 @@ minikube delete --all
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 ```
 
-## 7. Installing an simple Chart
+## 7. Deploying a simple Chart
 
-- Install a MySQL server:
+- Deploy a MySQL server:
 
     ```shell
     helm repo update
@@ -140,7 +147,7 @@ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bas
     helm status my_mysql
     ```
 
-- Delete chart:
+- Delete the chart:
 
     ```shell
     helm uninstall my_mysql
