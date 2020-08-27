@@ -50,7 +50,7 @@ cd microservices-demo
 Istio helps developers while integrating their apps into the service mesh. It is as easy as executing `istioctl kube-inject` command for the application manifest:
 
 ```shell
-istioctl kube-inject -f ../microservices-demo/release/kubernetes-manifests.yaml
+istioctl kube-inject -f ./release/kubernetes-manifests.yaml
 ```
 
 Now, check a single service in order to see the current changes made by `istioctl`:

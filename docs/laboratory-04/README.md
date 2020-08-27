@@ -1,53 +1,349 @@
 # Laboratory 4 - Operating Istio
 
-Before beginning with the practice labs, it is is very advisable to explain a brief technical overview of Istio.
+In the last laboratory, we will explore some advanced features of Istio that provided Istio that will help you while operating a farm om microservces.
 
-> Most of this content is taken directly from the official Istio documentation.
+We will perform the following task:
 
-## What is Istio?
+1. Create simple Flask microservice.
+1. Install in your Minikube cluster.
+1. Deploy a sample application.
+1. Use a dashboard for Istio.
 
-At a high level, Istio helps reduce the complexity of these deployments, and eases the strain on your development teams. It is a completely open source service mesh that layers transparently onto existing distributed applications. It is also a platform, including APIs that let it integrate into any logging platform, or telemetry or policy system. Istio’s diverse feature set lets you successfully, and efficiently, run a distributed microservice architecture, and provides a uniform way to secure, connect, and monitor microservices.
+## 0. Determining the application URL
 
-## What is a service mesh?
+As in the previous laboratory, we will have to obtain the URL for accesing the application:
 
-Istio addresses the challenges developers and operators face as monolithic applications transition towards a distributed microservice architecture. To see how, it helps to take a more detailed look at Istio’s service mesh.
+1. Obtain host and ports:
 
-The term service mesh is used to describe the network of microservices that make up such applications and the interactions between them. As a service mesh grows in size and complexity, it can become harder to understand and manage. Its requirements can include discovery, load balancing, failure recovery, metrics, and monitoring. A service mesh also often has more complex operational requirements, like A/B testing, canary rollouts, rate limiting, access control, and end-to-end authentication.
+    ```shell
+    export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(.name=="http2")].nodePort}')
+    export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(.name=="https")].nodePort}')
+    export INGRESS_HOST=$(minikube ip)
+    export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
+    ```
 
-Istio provides behavioral insights and operational control over the service mesh as a whole, offering a complete solution to satisfy the diverse requirements of microservice applications.
+1. Run the following command to retrieve the external address of the Bookinfo application.
 
-![Example Service Mesh Architecture](https://www.nginx.com/wp-content/uploads/2019/02/service-mesh-generic-topology_social.png)
+    ```shell
+    echo http://"$GATEWAY_URL"
+    ```
 
-## Why use Istio?
+## 1. Deploy simple Flash microservice
 
-Istio makes it easy to create a network of deployed services with load balancing, service-to-service authentication, monitoring, and more, with few or no code changes in service code. You add Istio support to services by deploying a special sidecar proxy throughout your environment that intercepts all network communication between microservices, then configure and manage Istio using its control plane functionality, which includes:
+Before playing with [Istio Traffic Management features](https://istio.io/latest/docs/tasks/traffic-management/), we will create and deploy in Minikube a very simple HTTP server:
 
-- Automatic load balancing for HTTP, gRPC, WebSocket, and TCP traffic.
-- Fine-grained control of traffic behavior with rich routing rules, retries, failovers, and fault injection.
-- A pluggable policy layer and configuration API supporting access controls, rate limits and quotas.
-- Automatic metrics, logs, and traces for all traffic within a cluster, including cluster ingress and egress.
-- Secure service-to-service communication in a cluster with strong identity-based authentication and authorization.
+- Download simple-flask repository:
 
-![Istio Architecture](https://istio.io/latest/docs/ops/deployment/architecture/arch.svg)
+    ```bash
+    git clone git@github.com:alvsanand/simple-flask.git
+    ```
 
-## Core features
+- Build simple-flask docker image:
 
-Istio most key capabilities are:
+    ```bash
+    cd simple-flask
+    eval $(minikube docker-env)
+    docker build -t alvsanand/simple-flask .
+    ```
 
-### Traffic management
+- Download [simple-flask-deployment.yaml](/simple-flask-deployment.yaml) file:
 
-Istio’s easy rules configuration and traffic routing lets you control the flow of traffic and API calls between services. Istio simplifies configuration of service-level properties like circuit breakers, timeouts, and retries, and makes it a breeze to set up important tasks like A/B testing, canary rollouts, and staged rollouts with percentage-based traffic splits.
+    ```yaml
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+    name: simple-flask-v1
+    namespace: default
+    spec:
+    selector:
+        matchLabels:
+        app: simple-flask
+        version: v1
+    replicas: 1
+    template:
+        metadata:
+        labels:
+            app: simple-flask
+            version: v1
+        spec:
+        containers:
+        - name: simple-flask-v1
+            image: alvsanand/simple-flask:latest
+            imagePullPolicy: Never
+            env:
+            - name: VERSION
+            value: "1.0"
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+    name: simple-flask-v2
+    namespace: default
+    spec:
+    selector:
+        matchLabels:
+        app: simple-flask
+        version: v2
+    replicas: 1
+    template:
+        metadata:
+        labels:
+            app: simple-flask
+            version: v2
+        spec:
+        containers:
+        - name: simple-flask-v1
+            image: alvsanand/simple-flask:latest
+            imagePullPolicy: Never
+            env:
+            - name: VERSION
+            value: "2.0"
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+    name: simple-flask
+    spec:
+    type: ClusterIP
+    selector:
+        app: simple-flask
+    ports:
+    - name: http
+        port: 80
+        targetPort: 8080
+    ```
 
-With better visibility into your traffic, and out-of-box failure recovery features, you can catch issues before they cause problems, making calls more reliable, and your network more robust – no matter what conditions you face.
+- Deploy `simple-flask-deployment.yaml` file:
 
-### Security
+    ```bash
+    istioctl kube-inject -f simple-flask-deployment.yaml | kubectl apply -f -
 
-Istio’s security capabilities free developers to focus on security at the application level. Istio provides the underlying secure communication channel, and manages authentication, authorization, and encryption of service communication at scale. With Istio, service communications are secured by default, letting you enforce policies consistently across diverse protocols and runtimes – all with little or no application changes.
+## 2. Request Routing
 
-While Istio is platform independent, using it with Kubernetes (or infrastructure) network policies, the benefits are even greater, including the ability to secure pod-to-pod or service-to-service communication at the network and application layers.
+The goal of this exercise is to apply rules that route in all traffic to v1 (version 1) of the microservices in two different ways:
 
-### Observability
+- By default.
+- Based on the value of an HTTP request header.
 
-Istio’s robust tracing, monitoring, and logging features give you deep insights into your service mesh deployment. Gain a real understanding of how service performance impacts things upstream and downstream with Istio’s monitoring features, while its custom dashboards provide visibility into the performance of all your services and let you see how that performance is affecting your other processes.
+### 2.1. Default routing
 
-All these features let you more effectively set, monitor, and enforce SLOs on services. Of course, the bottom line is that you can detect and fix issues quickly and efficiently.
+Firstly, we will explore [Istio Request Routing](https://istio.io/latest/docs/tasks/traffic-management/request-routing/) routing all traffic of our `simple-flask` to `v1`:
+
+- Download [simple-flask-networking-routing1.yaml](/simple-flask-networking-routing1.yaml) file:
+
+    ```yaml
+    apiVersion: networking.istio.io/v1beta1
+    kind: Gateway
+    metadata:
+      name: simple-flask-gateway
+    spec:
+      selector:
+        istio: ingressgateway # use Istio default gateway implementation
+      servers:
+        - port:
+            number: 80
+            name: http
+            protocol: HTTP
+          hosts:
+            - "*"
+    ---
+    apiVersion: networking.istio.io/v1beta1
+    kind: DestinationRule
+    metadata:
+      name: simple-flask
+    spec:
+      host: simple-flask
+      subsets:
+        - name: v1
+          labels:
+            version: v1
+        - name: v2
+          labels:
+            version: v2
+    ---
+    apiVersion: networking.istio.io/v1beta1
+    kind: VirtualService
+    metadata:
+      name: simple-flask
+    spec:
+      hosts:
+        - "simple-flask.default.svc.cluster.local"
+      http:
+        - route:
+            - destination:
+                host: simple-flask
+                subset: v1
+                port:
+                  number: 80
+    ```
+
+- Deploy `simple-flask-networking-routing1.yaml` file:
+
+    ```bash
+    kubectl apply -f simple-flask-networking-routing1.yaml
+    ```
+
+- Test service:
+
+    ```bash
+    curl -v http://"$GATEWAY_URL"
+    ```
+
+- Delete `simple-flask-networking-routing1.yaml` file:
+
+    ```bash
+    kubectl delete -f simple-flask-networking-routing1.yaml
+    ```
+
+### 2.1.1 Default routing but to v2
+
+Now, we will modify the VirtualService to route traffic to `v2`:
+
+- Download [simple-flask-networking-routing1.yaml](/simple-flask-networking-routing11.yaml) file:
+
+    ```yaml
+    apiVersion: networking.istio.io/v1beta1
+    kind: Gateway
+    metadata:
+      name: simple-flask-gateway
+    spec:
+      selector:
+        istio: ingressgateway # use Istio default gateway implementation
+      servers:
+        - port:
+            number: 80
+            name: http
+            protocol: HTTP
+          hosts:
+            - "*"
+    ---
+    apiVersion: networking.istio.io/v1beta1
+    kind: DestinationRule
+    metadata:
+      name: simple-flask
+    spec:
+      host: simple-flask
+      subsets:
+        - name: v1
+          labels:
+            version: v1
+        - name: v2
+          labels:
+            version: v2
+    ---
+    apiVersion: networking.istio.io/v1beta1
+    kind: VirtualService
+    metadata:
+      name: simple-flask
+    spec:
+      hosts:
+        - "simple-flask.default.svc.cluster.local"
+      http:
+        - route:
+            - destination:
+                host: simple-flask
+                subset: v2
+                port:
+                  number: 80
+    ```
+
+- Deploy `simple-flask-networking-routing11.yaml` file:
+
+    ```bash
+    kubectl apply -f simple-flask-networking-routing11.yaml
+    ```
+
+- Test service:
+
+    ```bash
+    curl -v http://"$GATEWAY_URL"
+    ```
+
+- Delete `simple-flask-networking-routing11.yaml` file:
+
+    ```bash
+    kubectl delete -f simple-flask-networking-routing11.yaml
+    ```
+
+### 2.1. Based on the value of an HTTP request header
+
+Finally, we will shift traffic based on the HTTP Header `end-user`:
+
+- Download [simple-flask-networking-routing2.yaml](/simple-flask-networking-routing2.yaml) file:
+
+    ```yaml
+    apiVersion: networking.istio.io/v1beta1
+    kind: Gateway
+    metadata:
+      name: simple-flask-gateway
+    spec:
+      selector:
+        istio: ingressgateway # use Istio default gateway implementation
+      servers:
+        - port:
+            number: 80
+            name: http
+            protocol: HTTP
+          hosts:
+            - "*"
+    ---
+    apiVersion: networking.istio.io/v1beta1
+    kind: DestinationRule
+    metadata:
+      name: simple-flask
+    spec:
+      host: simple-flask
+      subsets:
+        - name: v1
+          labels:
+            version: v1
+        - name: v2
+          labels:
+            version: v2
+    ---
+    apiVersion: networking.istio.io/v1beta1
+    kind: VirtualService
+    metadata:
+      name: simple-flask
+    spec:
+      hosts:
+        - "*"
+      gateways:
+      - simple-flask-gateway
+      http:
+        - match:
+          - headers:
+              end-user:
+                exact: user-v1
+          route:
+            - destination:
+                host: simple-flask
+                subset: v1
+                port:
+                  number: 80
+        - route:
+            - destination:
+                host: simple-flask
+                subset: v2
+                port:
+                  number: 80
+    ```
+
+- Deploy `simple-flask-networking-routing2.yaml` file:
+
+    ```bash
+    kubectl apply -f simple-flask-networking-routing2.yaml
+    ```
+
+- Test service:
+
+    ```bash
+    curl -v http://"$GATEWAY_URL"
+    curl -H 'end-user: user-v1' -v http://"$GATEWAY_URL"
+    ```
+
+- Delete `simple-flask-networking-routing2.yaml` file:
+
+    ```bash
+    kubectl delete -f simple-flask-networking-routing2.yaml
+    ```
