@@ -1,13 +1,13 @@
 # Laboratory 4 - Operating Istio
 
-In the last laboratory, we will explore some advanced features of Istio that provided Istio that will help you while operating a farm om microservces.
+In the last laboratory, we will explore some advanced features of Istio that provided Istio that will help you while operating a farm of microservices.
 
 We will perform the following task:
 
-1. Create simple Flask microservice.
-1. Install in your Minikube cluster.
-1. Deploy a sample application.
-1. Use a dashboard for Istio.
+1. Deploy simple Flash microservice.
+1. Route traffic.
+1. Circuit breaking when timeout happens.
+1. Perform A/B testing.
 
 ## 0. Determining the application URL
 
@@ -30,7 +30,9 @@ As in the previous laboratory, we will have to obtain the URL for accesing the a
 
 ## 1. Deploy simple Flash microservice
 
-Before playing with [Istio Traffic Management features](https://istio.io/latest/docs/tasks/traffic-management/), we will create and deploy in Minikube a very simple HTTP server:
+Before playing with [Istio Traffic Management features](https://istio.io/latest/docs/tasks/traffic-management/), we will create and deploy in Minikube a very simple HTTP server. This first iteration will deploy two different version od the app.
+
+To do so, follow these steps: 
 
 - Download simple-flask repository:
 
@@ -46,77 +48,13 @@ Before playing with [Istio Traffic Management features](https://istio.io/latest/
     docker build -t alvsanand/simple-flask .
     ```
 
-- Download [simple-flask-deployment.yaml](/simple-flask-deployment.yaml) file:
-
-    ```yaml
-    apiVersion: apps/v1
-    kind: Deployment
-    metadata:
-    name: simple-flask-v1
-    namespace: default
-    spec:
-    selector:
-        matchLabels:
-        app: simple-flask
-        version: v1
-    replicas: 1
-    template:
-        metadata:
-        labels:
-            app: simple-flask
-            version: v1
-        spec:
-        containers:
-        - name: simple-flask-v1
-            image: alvsanand/simple-flask:latest
-            imagePullPolicy: Never
-            env:
-            - name: VERSION
-            value: "1.0"
-    ---
-    apiVersion: apps/v1
-    kind: Deployment
-    metadata:
-    name: simple-flask-v2
-    namespace: default
-    spec:
-    selector:
-        matchLabels:
-        app: simple-flask
-        version: v2
-    replicas: 1
-    template:
-        metadata:
-        labels:
-            app: simple-flask
-            version: v2
-        spec:
-        containers:
-        - name: simple-flask-v1
-            image: alvsanand/simple-flask:latest
-            imagePullPolicy: Never
-            env:
-            - name: VERSION
-            value: "2.0"
-    ---
-    apiVersion: v1
-    kind: Service
-    metadata:
-    name: simple-flask
-    spec:
-    type: ClusterIP
-    selector:
-        app: simple-flask
-    ports:
-    - name: http
-        port: 80
-        targetPort: 8080
-    ```
+- Download [simple-flask-deployment.yaml](/simple-flask-deployment.yaml) file.
 
 - Deploy `simple-flask-deployment.yaml` file:
 
     ```bash
     istioctl kube-inject -f simple-flask-deployment.yaml | kubectl apply -f -
+    ```
 
 ## 2. Request Routing
 
@@ -129,53 +67,7 @@ The goal of this exercise is to apply rules that route in all traffic to v1 (ver
 
 Firstly, we will explore [Istio Request Routing](https://istio.io/latest/docs/tasks/traffic-management/request-routing/) routing all traffic of our `simple-flask` to `v1`:
 
-- Download [simple-flask-networking-routing1.yaml](/simple-flask-networking-routing1.yaml) file:
-
-    ```yaml
-    apiVersion: networking.istio.io/v1beta1
-    kind: Gateway
-    metadata:
-      name: simple-flask-gateway
-    spec:
-      selector:
-        istio: ingressgateway # use Istio default gateway implementation
-      servers:
-        - port:
-            number: 80
-            name: http
-            protocol: HTTP
-          hosts:
-            - "*"
-    ---
-    apiVersion: networking.istio.io/v1beta1
-    kind: DestinationRule
-    metadata:
-      name: simple-flask
-    spec:
-      host: simple-flask
-      subsets:
-        - name: v1
-          labels:
-            version: v1
-        - name: v2
-          labels:
-            version: v2
-    ---
-    apiVersion: networking.istio.io/v1beta1
-    kind: VirtualService
-    metadata:
-      name: simple-flask
-    spec:
-      hosts:
-        - "simple-flask.default.svc.cluster.local"
-      http:
-        - route:
-            - destination:
-                host: simple-flask
-                subset: v1
-                port:
-                  number: 80
-    ```
+- Download [simple-flask-networking-routing1.yaml](/simple-flask-networking-routing1.yaml).
 
 - Deploy `simple-flask-networking-routing1.yaml` file:
 
@@ -199,53 +91,7 @@ Firstly, we will explore [Istio Request Routing](https://istio.io/latest/docs/ta
 
 Now, we will modify the VirtualService to route traffic to `v2`:
 
-- Download [simple-flask-networking-routing1.yaml](/simple-flask-networking-routing11.yaml) file:
-
-    ```yaml
-    apiVersion: networking.istio.io/v1beta1
-    kind: Gateway
-    metadata:
-      name: simple-flask-gateway
-    spec:
-      selector:
-        istio: ingressgateway # use Istio default gateway implementation
-      servers:
-        - port:
-            number: 80
-            name: http
-            protocol: HTTP
-          hosts:
-            - "*"
-    ---
-    apiVersion: networking.istio.io/v1beta1
-    kind: DestinationRule
-    metadata:
-      name: simple-flask
-    spec:
-      host: simple-flask
-      subsets:
-        - name: v1
-          labels:
-            version: v1
-        - name: v2
-          labels:
-            version: v2
-    ---
-    apiVersion: networking.istio.io/v1beta1
-    kind: VirtualService
-    metadata:
-      name: simple-flask
-    spec:
-      hosts:
-        - "simple-flask.default.svc.cluster.local"
-      http:
-        - route:
-            - destination:
-                host: simple-flask
-                subset: v2
-                port:
-                  number: 80
-    ```
+- Download [simple-flask-networking-routing1.yaml](/simple-flask-networking-routing11.yaml) file.
 
 - Deploy `simple-flask-networking-routing11.yaml` file:
 
@@ -269,65 +115,7 @@ Now, we will modify the VirtualService to route traffic to `v2`:
 
 Finally, we will shift traffic based on the HTTP Header `end-user`:
 
-- Download [simple-flask-networking-routing2.yaml](/simple-flask-networking-routing2.yaml) file:
-
-    ```yaml
-    apiVersion: networking.istio.io/v1beta1
-    kind: Gateway
-    metadata:
-      name: simple-flask-gateway
-    spec:
-      selector:
-        istio: ingressgateway # use Istio default gateway implementation
-      servers:
-        - port:
-            number: 80
-            name: http
-            protocol: HTTP
-          hosts:
-            - "*"
-    ---
-    apiVersion: networking.istio.io/v1beta1
-    kind: DestinationRule
-    metadata:
-      name: simple-flask
-    spec:
-      host: simple-flask
-      subsets:
-        - name: v1
-          labels:
-            version: v1
-        - name: v2
-          labels:
-            version: v2
-    ---
-    apiVersion: networking.istio.io/v1beta1
-    kind: VirtualService
-    metadata:
-      name: simple-flask
-    spec:
-      hosts:
-        - "*"
-      gateways:
-      - simple-flask-gateway
-      http:
-        - match:
-          - headers:
-              end-user:
-                exact: user-v1
-          route:
-            - destination:
-                host: simple-flask
-                subset: v1
-                port:
-                  number: 80
-        - route:
-            - destination:
-                host: simple-flask
-                subset: v2
-                port:
-                  number: 80
-    ```
+- Download [simple-flask-networking-routing2.yaml](/simple-flask-networking-routing2.yaml) file.
 
 - Deploy `simple-flask-networking-routing2.yaml` file:
 
@@ -346,4 +134,100 @@ Finally, we will shift traffic based on the HTTP Header `end-user`:
 
     ```bash
     kubectl delete -f simple-flask-networking-routing2.yaml
+    ```
+
+## 3. Circuit breaking
+
+In this exercise, we will explore [Istio Circuit Breaking](https://istio.io/latest/docs/tasks/traffic-management/circuit-breaking/) routing and we will be able to route traffic when a service responds very slowly.
+
+The step are:
+
+- Deploy a single simple-flask with 1 second delay.
+- Test service with delay.
+- Modify networking to return an error when a timeout happens.
+
+### 3.1. Deploy simple-flask with delays
+
+- Download [simple-flask-deployment-circuit.yaml](/simple-flask-deployment-circuit.yaml) file.
+
+- Deploy `simple-flask-deployment-circuit.yaml` file:
+
+    ```bash
+    istioctl kube-inject -f simple-flask-deployment-circuit.yaml | kubectl apply -f -
+    ```
+
+### 3.2. Route traffic with delays
+
+- Download [simple-flask-networking-circuit1.yaml](/simple-flask-networking-circuit1.yaml) file.
+
+- Deploy `simple-flask-networking-circuit1.yaml` file:
+
+    ```bash
+    kubectl apply -f simple-flask-networking-circuit1.yaml
+    ```
+
+- Test service:
+
+    ```bash
+    curl -v http://"$GATEWAY_URL"
+    ```
+
+- Delete `simple-flask-networking-circuit1.yaml` file:
+
+    ```bash
+    kubectl delete -f simple-flask-networking-circuit1.yaml
+    ```
+
+## 4. Circuit breaking
+
+In the last exercise, we will deploy an A/B testing deployment strategy using [Istio Traffic Shifting](https://istio.io/latest/docs/tasks/traffic-management/traffic-shifting/) routing.
+
+The step are:
+
+- Deploy a simple-flask with 2 different versions.
+- Deploy networking for A/B testing based on weights.
+- Test service with delay.
+
+### 3.1. Deploy simple-flask
+
+- Download [simple-flask-deployment.yaml](/simple-flask-deployment.yaml) file.
+
+- Deploy `simple-flask-deployment.yaml` file:
+
+    ```bash
+    istioctl kube-inject -f simple-flask-deployment.yaml | kubectl apply -f -
+    ```
+
+### 3.2.  Deploy networking for A/B testing based on weights
+
+- Download [simple-flask-networking-circuit1.yaml](/simple-flask-networking-circuit1.yaml) file.
+
+- Deploy `simple-flask-networking-circuit1.yaml` file:
+
+    ```bash
+    kubectl apply -f simple-flask-networking-traffic-shifting.yaml
+    ```
+
+- Test service:
+
+    ```bash
+    v1=0
+    v2=0
+    for i in $(seq 1 100); do
+        if $(curl -Ss http://"$GATEWAY_URL" | grep "1.0" > /dev/null 2>&1); then
+            v1=$((v1 + 1))
+        else
+            v2=$((v2 + 1))
+        fi
+    done
+
+    echo "Responses from V1 = $v1"
+    echo "Responses from V2 = $v2"
+
+    ```
+
+- Delete `simple-flask-networking-circuit1.yaml` file:
+
+    ```bash
+    kubectl delete -f simple-flask-networking-circuit1.yaml
     ```
