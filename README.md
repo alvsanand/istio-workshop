@@ -2,8 +2,6 @@
 
 This project contains all the material used in the Istio Workshop.
 
-In order to begin with go to this [link](docs/README.md).
-
 ## VuePress website
 
 The documentation of this project is VuePress compliant. So you can use it in order to generate a static website instead of using the Markdown files.
@@ -17,7 +15,7 @@ The documentation of this project is VuePress compliant. So you can use it in or
         yarn run build
         ```
 
-### Launch site localli
+### Launch site locally
 
 - Start server
 
