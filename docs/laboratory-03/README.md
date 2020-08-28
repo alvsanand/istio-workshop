@@ -4,14 +4,19 @@ In this laboratory, we will learn how to modify our application in order to work
 
 ![Online Boutique Archtiecture](https://github.com/GoogleCloudPlatform/microservices-demo/raw/master/docs/img/architecture-diagram.png)
 
-## 1. Downloading microservices-demo application
+While integrating an application with Istio, we must following these simple steps:
+
+- Deploy in Kubernetes our services injected with Istio sidecards.
+- Deploy Istio networking services to K8s for the services with our custom rules and configuration.
+
+## 0. Downloading microservices-demo application
 
 ```shell
 git clone git@github.com:GoogleCloudPlatform/microservices-demo.git
 cd microservices-demo
 ```
 
-## 2. Testing microservices-demo application without Istio
+## 1. Testing microservices-demo application without Istio
 
 1. Disable istio-injection:
 
@@ -45,7 +50,7 @@ cd microservices-demo
     kubectl destroy -f ./release/kubernetes-manifests.yaml
     ```
 
-## 3. Injecting Istio sidecar into the application
+## 2. Injecting Istio sidecar into the application
 
 Istio helps developers while integrating their apps into the service mesh. It is as easy as executing `istioctl kube-inject` command for the application manifest:
 
@@ -55,7 +60,7 @@ istioctl kube-inject -f ./release/kubernetes-manifests.yaml
 
 Now, check a single service in order to see the current changes made by `istioctl`:
 
-- Before:
+- Default K8s deployment specification:
 
     ```yaml
     apiVersion: apps/v1
@@ -112,11 +117,13 @@ Now, check a single service in order to see the current changes made by `istioct
                 limits:
                 cpu: 200m
                 memory: 128Mi
+    ...
     ```
 
-- Before:
+- Specification injected with the sidecard:
 
     ```yaml
+    ...
     apiVersion: apps/v1
     kind: Deployment
     metadata:
@@ -356,11 +363,12 @@ Now, check a single service in order to see the current changes made by `istioct
             name: istio-ca-root-cert
             name: istiod-ca-cert
     status: {}
+    ...
     ```
 
 As you can see, the service is modified deeply adding a lot new stuff. Next, We will learn what Istio does.
 
-### 3.1 Review Sidecar injection
+## 3. Sidecar injection
 
 In simple terms, sidecar injection is adding the configuration of additional containers to the pod template. The added containers needed for the Istio service mesh are:
 
@@ -373,7 +381,7 @@ So, you can see how this type of container is perfect for a set-up or initializa
 
 `istio-proxy` This is the actual sidecar proxy (based on Envoy).
 
-### 3.2 Automatic injection
+### 3.1 Automatic injection
 
 Most of the times, you don’t want to manually inject a sidecar every time you deploy an application, using the `istioctl` command, but would prefer that Istio automatically inject the sidecar to your pod. This is the recommended approach and for it to work, all you need to do is to label the namespace where you are deploying the app with istio-injection=enabled.
 
@@ -397,7 +405,7 @@ Once labeled, Istio injects the sidecar automatically for any pod you deploy in 
 
 Istio by default is high secure, so no connectivity is added if you do not say so. Now, we will deploy a new manifest adding connectivity services through Istio:
 
-- [istio-micro-services-networking.yaml](../istio-micro-services-networking.yaml):
+- [istio-micro-services-networking.yaml](Ristio-micro-services-networking.yaml):
 
 ```yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -520,7 +528,7 @@ spec:
 
 ### 5.1 Determining the application URL
 
-As in the previous laboratory, we will have to obtain the URL for accesing the application:
+As in the previous laboratory, we will have to obtain the URL for accessing the application:
 
 1. Obtain host and ports:
 
@@ -537,7 +545,7 @@ As in the previous laboratory, we will have to obtain the URL for accesing the a
     sudo bash -c "echo '$INGRESS_HOST microservices-demo.example.com ' >> /etc/hosts"
     ```
 
-1. Run the following command to retrieve the external address of the Bookinfo application.
+1. Run the following command to retrieve the external address of the application.
 
     ```shell
     echo https://"$GATEWAY_URL"
@@ -545,7 +553,7 @@ As in the previous laboratory, we will have to obtain the URL for accesing the a
 
 ![Microservices Demo with HTTPS](./microservices-demo-screenshot.png)
 
-## 6. Checking integration with Istio dashboard
+## 6. Checking services using the Istio dashboard
 
 Now, it is time to visually review what is deployed in Istio:
 
