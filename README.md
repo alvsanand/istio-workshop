@@ -2,7 +2,7 @@
 
 This project contains all the material used in the Istio Workshop.
 
-In order to begin with go to this [link](https://alvsanand.github.io/istio-workshop).
+In order to begin with go to this [link](https://alvsanand.github.io/istio-workshop/).
 
 ## VuePress website
 
