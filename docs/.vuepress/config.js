@@ -1,7 +1,7 @@
 module.exports = {
     title: "Istio Workshop by Bluetab Cloud Practice",
     description: "Istio Workshop by Bluetab Cloud Practice",
-    base: '/cloud-practice/art-culos-kubernetes/istio-workshop/',
+    base: '/istio-workshop/',
     head: [
         ['link', { rel: "icon", href: "/favicon.ico" }]
     ],
