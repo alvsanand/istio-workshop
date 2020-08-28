@@ -7,10 +7,9 @@
 Through this workshop you will be able to learn:
 
 - What are a service mash and Istio.
-- How to install Kubernetes.
-- How to install Istio in K8s.
-- How to integrate an existing application into Istio.
-- How to operate Istio.
+- How to install Minikube and Istio.
+- How to integrate your application into Istio.
+- How to manage traffic of yours using Istio.
 
 ## Index
 
