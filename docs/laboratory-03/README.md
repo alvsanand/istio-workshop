@@ -47,7 +47,7 @@ cd microservices-demo
 1. Destroy the deployment.
 
     ```shell
-    kubectl destroy -f ./release/kubernetes-manifests.yaml
+    kubectl delete -f ./release/kubernetes-manifests.yaml
     ```
 
 ## 2. Injecting Istio sidecar into the application

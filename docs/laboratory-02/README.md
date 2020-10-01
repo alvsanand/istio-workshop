@@ -127,7 +127,7 @@ Follow these instructions to set the `INGRESS_HOST` and `INGRESS_PORT` variables
 1. Set `GATEWAY_URL`:
 
     ```shell
-    export GATEWAY_URL=$INGRESS_HOST:$SECURE_INGRESS_PORT
+    export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
     ```
 
 1. Run the following command to retrieve the external address of the Bookinfo application.

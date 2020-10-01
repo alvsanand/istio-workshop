@@ -4,7 +4,7 @@ In the last laboratory, we will explore an advanced feature of Istio called [Tra
 
 We will run the following tasks:
 
-1. Deploy a simple Flash microservice.
+1. Deploy a simple Flask microservice.
 1. Route traffic to it.
 1. Breaks the circuit when timeouts occur.
 1. Perform A/B testing.
@@ -287,6 +287,26 @@ spec:
 
     ```bash
     kubectl apply -f simple-flask-networking-circuit1.yaml
+    ```
+
+- Test service:
+
+    ```bash
+    curl -v http://"$GATEWAY_URL"
+    ```
+
+- Delete `simple-flask-networking-circuit1.yaml` file:
+
+    ```bash
+    kubectl delete -f simple-flask-networking-circuit1.yaml
+    ```
+
+### 3.3. Route traffic with Circuit Breaking enabled
+
+- Deploy [simple-flask-networking-circuit2.yaml](../simple-flask-networking-circuit2.yaml) file:
+
+    ```bash
+    kubectl apply -f simple-flask-networking-circuit2.yaml
     ```
 
 - Test service:
