@@ -25,7 +25,7 @@ Depending of your OS, you will have different options for installing Minilube.
 
 ```shell
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-sudo install minikube-linux-amd64 /usr/local/bin/minikube
+sudo mv minikube-linux-amd64 /usr/local/bin/minikube
 ```
 
 ### MacOs
