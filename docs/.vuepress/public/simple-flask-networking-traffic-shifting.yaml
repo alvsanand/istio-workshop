@@ -1,0 +1,52 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: simple-flask-gateway
+spec:
+  selector:
+    istio: ingressgateway # use Istio default gateway implementation
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "*"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: simple-flask
+spec:
+  host: simple-flask
+  subsets:
+    - name: v1
+      labels:
+        version: v1
+    - name: v2
+      labels:
+        version: v2
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: simple-flask
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - simple-flask-gateway
+  http:
+    - route:
+        - destination:
+            host: simple-flask
+            port:
+              number: 80
+            subset: v1
+          weight: 80
+        - destination:
+            host: simple-flask
+            port:
+              number: 80
+            subset: v2
+          weight: 20
