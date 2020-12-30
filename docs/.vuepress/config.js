@@ -1,6 +1,7 @@
 const path = require("path");
 
-const domain = 'https://alvsanand.github.io/istio-workshop';
+const urlPath = '/istio-workshop';
+const domain = 'https://alvsanand.github.io' + urlPath;
 const title = 'Istio Workshop';
 const description = title;
 const author = 'alvsanand';
@@ -8,7 +9,7 @@ const author = 'alvsanand';
 module.exports = {
     title: title,
     description: title,
-    base: '/istio-workshop/',
+    base: urlPath + '/',
     head: [
         ['link', { rel: "icon", href: "/favicon.ico" }]
     ],
