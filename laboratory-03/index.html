@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Lab 3 - Integrating an app | Istio Workshop</title>
+    <meta name="generator" content="VuePress 1.7.1">
+    <link rel="icon" href="/istio-workshop/favicon.ico">
+    <meta name="description" content="Istio Workshop">
+    <meta property="og:site_name" content="Istio Workshop">
+    <meta property="og:title" content="Lab 3 - Integrating an app">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://alvsanand.github.io/istio-workshop/laboratory-03/">
+    <meta property="og:image" content="https://alvsanand.github.io/istio-workshop/istio_practice_preview.png">
+    <meta name="twitter:title" content="Lab 3 - Integrating an app">
+    <meta name="twitter:url" content="https://alvsanand.github.io/istio-workshop/laboratory-03/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://alvsanand.github.io/istio-workshop/istio_practice_preview.png">
+    
+    <link rel="preload" href="/istio-workshop/assets/css/0.styles.1d818571.css" as="style"><link rel="preload" href="/istio-workshop/assets/js/app.3b9c719d.js" as="script"><link rel="preload" href="/istio-workshop/assets/js/2.0a1165e1.js" as="script"><link rel="preload" href="/istio-workshop/assets/js/6.59ae5067.js" as="script"><link rel="prefetch" href="/istio-workshop/assets/js/10.8d9ac37f.js"><link rel="prefetch" href="/istio-workshop/assets/js/11.ae760421.js"><link rel="prefetch" href="/istio-workshop/assets/js/12.d180dbc3.js"><link rel="prefetch" href="/istio-workshop/assets/js/13.e133a97b.js"><link rel="prefetch" href="/istio-workshop/assets/js/14.484c0a8c.js"><link rel="prefetch" href="/istio-workshop/assets/js/3.15eff207.js"><link rel="prefetch" href="/istio-workshop/assets/js/4.a7535257.js"><link rel="prefetch" href="/istio-workshop/assets/js/5.d9a9b260.js"><link rel="prefetch" href="/istio-workshop/assets/js/7.13dcda93.js"><link rel="prefetch" href="/istio-workshop/assets/js/8.495e0370.js"><link rel="prefetch" href="/istio-workshop/assets/js/9.1d3d0d5a.js">
+    <link rel="stylesheet" href="/istio-workshop/assets/css/0.styles.1d818571.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/istio-workshop/" class="home-link router-link-active"><img src="/istio-workshop/istio_practice.png" alt="Istio Workshop" class="logo"> <span class="site-name can-hide">Istio Workshop</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/istio-workshop/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="@alvsanand" class="dropdown-title"><span class="title">@alvsanand</span> <span class="arrow down"></span></button> <button type="button" aria-label="@alvsanand" class="mobile-dropdown-title"><span class="title">@alvsanand</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/alvsanand" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://www.linkedin.com/in/alvsanand" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  LinekdIn
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="https://bluetab.net/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Bluetab
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Links" class="dropdown-title"><span class="title">Links</span> <span class="arrow down"></span></button> <button type="button" aria-label="Links" class="mobile-dropdown-title"><span class="title">Links</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://istio.io/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Istio
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://istio.io/docs/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Istio docs
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/istio-workshop/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="@alvsanand" class="dropdown-title"><span class="title">@alvsanand</span> <span class="arrow down"></span></button> <button type="button" aria-label="@alvsanand" class="mobile-dropdown-title"><span class="title">@alvsanand</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/alvsanand" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://www.linkedin.com/in/alvsanand" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  LinekdIn
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="https://bluetab.net/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Bluetab
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Links" class="dropdown-title"><span class="title">Links</span> <span class="arrow down"></span></button> <button type="button" aria-label="Links" class="mobile-dropdown-title"><span class="title">Links</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://istio.io/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Istio
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://istio.io/docs/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Istio docs
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div> <!----></nav>  <ul class="sidebar-links"><li><a href="/istio-workshop/" aria-current="page" class="sidebar-link">Istio Workshop</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/istio-workshop/#goals" class="sidebar-link">Goals</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/#index" class="sidebar-link">Index</a></li></ul></li><li><a href="/istio-workshop/technical_overview/" class="sidebar-link">Technical Overview</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/istio-workshop/technical_overview/#what-is-istio" class="sidebar-link">What is Istio?</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/technical_overview/#what-is-a-service-mesh" class="sidebar-link">What is a service mesh?</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/technical_overview/#why-use-istio" class="sidebar-link">Why use Istio?</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/technical_overview/#core-features" class="sidebar-link">Core features</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/technical_overview/#architecture" class="sidebar-link">Architecture</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/technical_overview/#components" class="sidebar-link">Components</a></li></ul></li><li><a href="/istio-workshop/laboratory-01/" class="sidebar-link">Lab 1 - Installing Minkube</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-01/#_1-installing-minikube" class="sidebar-link">1. Installing Minikube</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-01/#_2-starting-the-cluster" class="sidebar-link">2. Starting the cluster</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-01/#_3-interacting-with-k8s" class="sidebar-link">3. Interacting with K8s</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-01/#_4-deploying-a-sample-application" class="sidebar-link">4. Deploying a sample application</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-01/#_5-deleting-minikube-cluster" class="sidebar-link">5. Deleting minikube cluster</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-01/#_6-installing-helm" class="sidebar-link">6. Installing Helm</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-01/#_7-deploying-a-simple-chart" class="sidebar-link">7. Deploying a simple Chart</a></li></ul></li><li><a href="/istio-workshop/laboratory-02/" class="sidebar-link">Lab 2 - Installing Istio</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-02/#_1-downloading-istio" class="sidebar-link">1. Downloading Istio</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-02/#_2-installing-istio-in-minikube" class="sidebar-link">2. Installing Istio in Minikube</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-02/#_3-deploying-a-sample-application" class="sidebar-link">3. Deploying a sample application</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-02/#_4-managing-istio-using-a-dashboard" class="sidebar-link">4. Managing Istio using a dashboard</a></li></ul></li><li><a href="/istio-workshop/laboratory-03/" aria-current="page" class="active sidebar-link">Lab 3 - Integrating an app</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-03/#_1-downloading-microservices-demo-application" class="sidebar-link">1. Downloading microservices-demo application</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-03/#_2-testing-microservices-demo-application-without-istio" class="sidebar-link">2. Testing microservices-demo application without Istio</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-03/#_3-injecting-istio-sidecar-into-the-application" class="sidebar-link">3. Injecting Istio sidecar into the application</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-03/#_4-sidecar-injection" class="sidebar-link">4. Sidecar injection</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-03/#_5-deploying-microservices-demo-with-istio" class="sidebar-link">5. Deploying microservices-demo with Istio</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-03/#_6-adding-external-https-connectivity-through-istio" class="sidebar-link">6. Adding external HTTPS connectivity through Istio</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-03/#_7-checking-services-using-the-istio-dashboard" class="sidebar-link">7. Checking services using the Istio dashboard</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-03/#_8-removing-resources" class="sidebar-link">8. Removing resources</a></li></ul></li><li><a href="/istio-workshop/laboratory-04/" class="sidebar-link">Lab 4 - Traffic Management</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-04/#_1-traffic-management" class="sidebar-link">1. Traffic Management</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-04/#_2-determining-the-application-url" class="sidebar-link">2. Determining the application URL</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-04/#_3-deploying-simple-flask-microservice" class="sidebar-link">3. Deploying simple-flask microservice</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-04/#_4-routing-requests" class="sidebar-link">4. Routing requests</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-04/#_5-circuit-breaking" class="sidebar-link">5. Circuit breaking</a></li><li class="sidebar-sub-header"><a href="/istio-workshop/laboratory-04/#_6-traffic-shifting" class="sidebar-link">6. Traffic shifting</a></li></ul></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="lab-3-integrating-an-app"><a href="#lab-3-integrating-an-app" class="header-anchor">#</a> Lab 3 - Integrating an app</h1> <p>In this laboratory, we will learn how to modify our application in order to work with Istio. For that purpose, we will use the <a href="https://github.com/GoogleCloudPlatform/microservices-demo" target="_blank" rel="noopener noreferrer">Online Boutique<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> a sample microservices application provided by Google.</p> <p><img src="https://github.com/GoogleCloudPlatform/microservices-demo/raw/master/docs/img/architecture-diagram.png" alt="Online Boutique Archtiecture"></p> <p>While integrating an application with Istio, we must following these simple steps:</p> <ul><li>Deploy in Kubernetes our services injected with Istio sidecards.</li> <li>Deploy Istio networking services to K8s for the services with our custom rules and configuration.</li></ul> <h2 id="_1-downloading-microservices-demo-application"><a href="#_1-downloading-microservices-demo-application" class="header-anchor">#</a> 1. Downloading microservices-demo application</h2> <div class="language-sh extra-class"><pre class="language-sh"><code><span class="token function">git</span> clone git@github.com:GoogleCloudPlatform/microservices-demo.git
+<span class="token function">git</span> reset --hard v0.2.1
+<span class="token builtin class-name">cd</span> microservices-demo
+</code></pre></div><h2 id="_2-testing-microservices-demo-application-without-istio"><a href="#_2-testing-microservices-demo-application-without-istio" class="header-anchor">#</a> 2. Testing microservices-demo application without Istio</h2> <ol><li><p>Disable istio-injection:</p> <div class="language-sh extra-class"><pre class="language-sh"><code>kubectl label namespace default istio-injection<span class="token operator">=</span>disabled --overwrite
+</code></pre></div></li> <li><p>Deploy the application:</p> <div class="language-sh extra-class"><pre class="language-sh"><code>kubectl apply -f ./release/kubernetes-manifests.yaml
+</code></pre></div></li> <li><p>Run to see pods are in a Ready state and wait until all pods have all pods instances <code>READY</code> and <code>STATUS</code> in <strong>Running</strong>:</p> <div class="language-sh extra-class"><pre class="language-sh"><code>kubectl get pods
+</code></pre></div></li> <li><p>Open application to outside traffic:</p> <div class="language-sh extra-class"><pre class="language-sh"><code>kubectl port-forward deployment/frontend <span class="token number">18080</span>:8080
+</code></pre></div></li> <li><p>Open the <a href="http://localhost:18080/" target="_blank" rel="noopener noreferrer">Online Boutique<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> in your browser.</p></li> <li><p>Destroy the deployment.</p> <div class="language-sh extra-class"><pre class="language-sh"><code>kubectl delete -f ./release/kubernetes-manifests.yaml
+</code></pre></div></li></ol> <div class="custom-block warning"><p class="custom-block-title">Errors while setting up microservices-demo</p> <p>Sometimes, this demo application has several problems when you deploy it into Kubernetes.</p> <p>If you have waited too much time, try destroying the deployment and launching it again.</p></div> <h2 id="_3-injecting-istio-sidecar-into-the-application"><a href="#_3-injecting-istio-sidecar-into-the-application" class="header-anchor">#</a> 3. Injecting Istio sidecar into the application</h2> <p>Istio helps developers while integrating their apps into the service mesh. It is as easy as executing <code>istioctl kube-inject</code> command for the application manifest:</p> <div class="language-sh extra-class"><pre class="language-sh"><code>istioctl kube-inject -f ./release/kubernetes-manifests.yaml
+</code></pre></div><p>Now, check a single service in order to see the current changes made by <code>istioctl</code>:</p> <ul><li><p>Default K8s deployment specification:</p> <div class="language-yaml extra-class"><pre class="language-yaml"><code><span class="token punctuation">---</span>
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> apps/v1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Deployment
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+<span class="token key atrule">name</span><span class="token punctuation">:</span> checkoutservice
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+<span class="token key atrule">selector</span><span class="token punctuation">:</span>
+  <span class="token key atrule">matchLabels</span><span class="token punctuation">:</span>
+  <span class="token key atrule">app</span><span class="token punctuation">:</span> checkoutservice
+<span class="token key atrule">template</span><span class="token punctuation">:</span>
+  <span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">labels</span><span class="token punctuation">:</span>
+    <span class="token key atrule">app</span><span class="token punctuation">:</span> checkoutservice
+  <span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">containers</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> server
+      <span class="token key atrule">image</span><span class="token punctuation">:</span> gcr.io/google<span class="token punctuation">-</span>samples/microservices<span class="token punctuation">-</span>demo/checkoutservice<span class="token punctuation">:</span>v0.2.0
+      <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">containerPort</span><span class="token punctuation">:</span> <span class="token number">5050</span>
+      <span class="token key atrule">readinessProbe</span><span class="token punctuation">:</span>
+        <span class="token key atrule">exec</span><span class="token punctuation">:</span>
+        <span class="token key atrule">command</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&quot;/bin/grpc_health_probe&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;-addr=:5050&quot;</span><span class="token punctuation">]</span>
+      <span class="token key atrule">livenessProbe</span><span class="token punctuation">:</span>
+        <span class="token key atrule">exec</span><span class="token punctuation">:</span>
+        <span class="token key atrule">command</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&quot;/bin/grpc_health_probe&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;-addr=:5050&quot;</span><span class="token punctuation">]</span>
+      <span class="token key atrule">env</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> PORT
+          <span class="token key atrule">value</span><span class="token punctuation">:</span> <span class="token string">&quot;5050&quot;</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> PRODUCT_CATALOG_SERVICE_ADDR
+          <span class="token key atrule">value</span><span class="token punctuation">:</span> <span class="token string">&quot;productcatalogservice:3550&quot;</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> SHIPPING_SERVICE_ADDR
+          <span class="token key atrule">value</span><span class="token punctuation">:</span> <span class="token string">&quot;shippingservice:50051&quot;</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> PAYMENT_SERVICE_ADDR
+          <span class="token key atrule">value</span><span class="token punctuation">:</span> <span class="token string">&quot;paymentservice:50051&quot;</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> EMAIL_SERVICE_ADDR
+          <span class="token key atrule">value</span><span class="token punctuation">:</span> <span class="token string">&quot;emailservice:5000&quot;</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> CURRENCY_SERVICE_ADDR
+          <span class="token key atrule">value</span><span class="token punctuation">:</span> <span class="token string">&quot;currencyservice:7000&quot;</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> CART_SERVICE_ADDR
+          <span class="token key atrule">value</span><span class="token punctuation">:</span> <span class="token string">&quot;cartservice:7070&quot;</span>
+        <span class="token comment"># - name: DISABLE_STATS</span>
+        <span class="token comment">#   value: &quot;1&quot;</span>
+        <span class="token comment"># - name: DISABLE_TRACING</span>
+        <span class="token comment">#   value: &quot;1&quot;</span>
+        <span class="token comment"># - name: DISABLE_PROFILER</span>
+        <span class="token comment">#   value: &quot;1&quot;</span>
+        <span class="token comment"># - name: JAEGER_SERVICE_ADDR</span>
+        <span class="token comment">#   value: &quot;jaeger-collector:14268&quot;</span>
+      <span class="token key atrule">resources</span><span class="token punctuation">:</span>
+        <span class="token key atrule">requests</span><span class="token punctuation">:</span>
+          <span class="token key atrule">cpu</span><span class="token punctuation">:</span> 100m
+          <span class="token key atrule">memory</span><span class="token punctuation">:</span> 64Mi
+        <span class="token key atrule">limits</span><span class="token punctuation">:</span>
+          <span class="token key atrule">cpu</span><span class="token punctuation">:</span> 200m
+          <span class="token key atrule">memory</span><span class="token punctuation">:</span> 128Mi
+</code></pre></div></li> <li><p>Specification injected with the sidecard:</p> <div class="language-yaml extra-class"><pre class="language-yaml"><code><span class="token punctuation">---</span>
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> apps/v1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Deployment
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">creationTimestamp</span><span class="token punctuation">:</span> <span class="token null important">null</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> checkoutservice
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">selector</span><span class="token punctuation">:</span>
+    <span class="token key atrule">matchLabels</span><span class="token punctuation">:</span>
+      <span class="token key atrule">app</span><span class="token punctuation">:</span> checkoutservice
+  <span class="token key atrule">strategy</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+  <span class="token key atrule">template</span><span class="token punctuation">:</span>
+    <span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+      <span class="token key atrule">annotations</span><span class="token punctuation">:</span>
+        <span class="token key atrule">prometheus.io/path</span><span class="token punctuation">:</span> /stats/prometheus
+        <span class="token key atrule">prometheus.io/port</span><span class="token punctuation">:</span> <span class="token string">&quot;15020&quot;</span>
+        <span class="token key atrule">prometheus.io/scrape</span><span class="token punctuation">:</span> <span class="token string">&quot;true&quot;</span>
+        <span class="token key atrule">sidecar.istio.io/status</span><span class="token punctuation">:</span> <span class="token string">'{&quot;version&quot;:&quot;e2cb9d4837cda9584fd272bfa1f348525bcaacfadb7e9b9efbd21a3bb44ad7a1&quot;,&quot;initContainers&quot;:[&quot;istio-init&quot;],&quot;containers&quot;:[&quot;istio-proxy&quot;],&quot;volumes&quot;:[&quot;istio-envoy&quot;,&quot;istio-data&quot;,&quot;istio-podinfo&quot;,&quot;istio-token&quot;,&quot;istiod-ca-cert&quot;],&quot;imagePullSecrets&quot;:null}'</span>
+      <span class="token key atrule">creationTimestamp</span><span class="token punctuation">:</span> <span class="token null important">null</span>
+      <span class="token key atrule">labels</span><span class="token punctuation">:</span>
+        <span class="token key atrule">app</span><span class="token punctuation">:</span> checkoutservice
+        <span class="token key atrule">istio.io/rev</span><span class="token punctuation">:</span> <span class="token string">&quot;&quot;</span>
+        <span class="token key atrule">security.istio.io/tlsMode</span><span class="token punctuation">:</span> istio
+        <span class="token key atrule">service.istio.io/canonical-name</span><span class="token punctuation">:</span> checkoutservice
+        <span class="token key atrule">service.istio.io/canonical-revision</span><span class="token punctuation">:</span> latest
+    <span class="token key atrule">spec</span><span class="token punctuation">:</span>
+      <span class="token key atrule">containers</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">env</span><span class="token punctuation">:</span>
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> PORT
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> <span class="token string">&quot;5050&quot;</span>
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> PRODUCT_CATALOG_SERVICE_ADDR
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> productcatalogservice<span class="token punctuation">:</span><span class="token number">3550</span>
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> SHIPPING_SERVICE_ADDR
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> shippingservice<span class="token punctuation">:</span><span class="token number">50051</span>
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> PAYMENT_SERVICE_ADDR
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> paymentservice<span class="token punctuation">:</span><span class="token number">50051</span>
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> EMAIL_SERVICE_ADDR
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> emailservice<span class="token punctuation">:</span><span class="token number">5000</span>
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> CURRENCY_SERVICE_ADDR
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> currencyservice<span class="token punctuation">:</span><span class="token number">7000</span>
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> CART_SERVICE_ADDR
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> cartservice<span class="token punctuation">:</span><span class="token number">7070</span>
+          <span class="token key atrule">image</span><span class="token punctuation">:</span> gcr.io/google<span class="token punctuation">-</span>samples/microservices<span class="token punctuation">-</span>demo/checkoutservice<span class="token punctuation">:</span>v0.2.1
+          <span class="token key atrule">livenessProbe</span><span class="token punctuation">:</span>
+            <span class="token key atrule">exec</span><span class="token punctuation">:</span>
+              <span class="token key atrule">command</span><span class="token punctuation">:</span>
+                <span class="token punctuation">-</span> /bin/grpc_health_probe
+                <span class="token punctuation">-</span> <span class="token punctuation">-</span>addr=<span class="token punctuation">:</span><span class="token number">5050</span>
+          <span class="token key atrule">name</span><span class="token punctuation">:</span> server
+          <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+            <span class="token punctuation">-</span> <span class="token key atrule">containerPort</span><span class="token punctuation">:</span> <span class="token number">5050</span>
+          <span class="token key atrule">readinessProbe</span><span class="token punctuation">:</span>
+            <span class="token key atrule">exec</span><span class="token punctuation">:</span>
+              <span class="token key atrule">command</span><span class="token punctuation">:</span>
+                <span class="token punctuation">-</span> /bin/grpc_health_probe
+                <span class="token punctuation">-</span> <span class="token punctuation">-</span>addr=<span class="token punctuation">:</span><span class="token number">5050</span>
+          <span class="token key atrule">resources</span><span class="token punctuation">:</span>
+            <span class="token key atrule">limits</span><span class="token punctuation">:</span>
+              <span class="token key atrule">cpu</span><span class="token punctuation">:</span> 200m
+              <span class="token key atrule">memory</span><span class="token punctuation">:</span> 128Mi
+            <span class="token key atrule">requests</span><span class="token punctuation">:</span>
+              <span class="token key atrule">cpu</span><span class="token punctuation">:</span> 100m
+              <span class="token key atrule">memory</span><span class="token punctuation">:</span> 64Mi
+        <span class="token punctuation">-</span> <span class="token key atrule">args</span><span class="token punctuation">:</span>
+            <span class="token punctuation">-</span> proxy
+            <span class="token punctuation">-</span> sidecar
+            <span class="token punctuation">-</span> <span class="token punctuation">-</span><span class="token punctuation">-</span>domain
+            <span class="token punctuation">-</span> $(POD_NAMESPACE).svc.cluster.local
+            <span class="token punctuation">-</span> <span class="token punctuation">-</span><span class="token punctuation">-</span>serviceCluster
+            <span class="token punctuation">-</span> checkoutservice.$(POD_NAMESPACE)
+            <span class="token punctuation">-</span> <span class="token punctuation">-</span><span class="token punctuation">-</span>proxyLogLevel=warning
+            <span class="token punctuation">-</span> <span class="token punctuation">-</span><span class="token punctuation">-</span>proxyComponentLogLevel=misc<span class="token punctuation">:</span>error
+            <span class="token punctuation">-</span> <span class="token punctuation">-</span><span class="token punctuation">-</span>concurrency
+            <span class="token punctuation">-</span> <span class="token string">&quot;2&quot;</span>
+          <span class="token key atrule">env</span><span class="token punctuation">:</span>
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> JWT_POLICY
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> third<span class="token punctuation">-</span>party<span class="token punctuation">-</span>jwt
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> PILOT_CERT_PROVIDER
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> istiod
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> CA_ADDR
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> istiod.istio<span class="token punctuation">-</span>system.svc<span class="token punctuation">:</span><span class="token number">15012</span>
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> POD_NAME
+              <span class="token key atrule">valueFrom</span><span class="token punctuation">:</span>
+                <span class="token key atrule">fieldRef</span><span class="token punctuation">:</span>
+                  <span class="token key atrule">fieldPath</span><span class="token punctuation">:</span> metadata.name
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> POD_NAMESPACE
+              <span class="token key atrule">valueFrom</span><span class="token punctuation">:</span>
+                <span class="token key atrule">fieldRef</span><span class="token punctuation">:</span>
+                  <span class="token key atrule">fieldPath</span><span class="token punctuation">:</span> metadata.namespace
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> INSTANCE_IP
+              <span class="token key atrule">valueFrom</span><span class="token punctuation">:</span>
+                <span class="token key atrule">fieldRef</span><span class="token punctuation">:</span>
+                  <span class="token key atrule">fieldPath</span><span class="token punctuation">:</span> status.podIP
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> SERVICE_ACCOUNT
+              <span class="token key atrule">valueFrom</span><span class="token punctuation">:</span>
+                <span class="token key atrule">fieldRef</span><span class="token punctuation">:</span>
+                  <span class="token key atrule">fieldPath</span><span class="token punctuation">:</span> spec.serviceAccountName
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> HOST_IP
+              <span class="token key atrule">valueFrom</span><span class="token punctuation">:</span>
+                <span class="token key atrule">fieldRef</span><span class="token punctuation">:</span>
+                  <span class="token key atrule">fieldPath</span><span class="token punctuation">:</span> status.hostIP
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> CANONICAL_SERVICE
+              <span class="token key atrule">valueFrom</span><span class="token punctuation">:</span>
+                <span class="token key atrule">fieldRef</span><span class="token punctuation">:</span>
+                  <span class="token key atrule">fieldPath</span><span class="token punctuation">:</span> metadata.labels<span class="token punctuation">[</span><span class="token string">'service.istio.io/canonical-name'</span><span class="token punctuation">]</span>
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> CANONICAL_REVISION
+              <span class="token key atrule">valueFrom</span><span class="token punctuation">:</span>
+                <span class="token key atrule">fieldRef</span><span class="token punctuation">:</span>
+                  <span class="token key atrule">fieldPath</span><span class="token punctuation">:</span> metadata.labels<span class="token punctuation">[</span><span class="token string">'service.istio.io/canonical-revision'</span><span class="token punctuation">]</span>
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> PROXY_CONFIG
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string">
+                {&quot;proxyMetadata&quot;:{&quot;DNS_AGENT&quot;:&quot;&quot;}}</span>
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> ISTIO_META_POD_PORTS
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token punctuation">-</span>
+                <span class="token punctuation">[</span>
+                    <span class="token punctuation">{</span>&quot;containerPort&quot;<span class="token punctuation">:</span><span class="token number">5050</span><span class="token punctuation">}</span>
+                <span class="token punctuation">]</span>
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> ISTIO_META_APP_CONTAINERS
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> server
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> ISTIO_META_CLUSTER_ID
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> Kubernetes
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> ISTIO_META_INTERCEPTION_MODE
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> REDIRECT
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> ISTIO_META_WORKLOAD_NAME
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> checkoutservice
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> ISTIO_META_OWNER
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> kubernetes<span class="token punctuation">:</span>//apis/apps/v1/namespaces/default/deployments/checkoutservice
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> ISTIO_META_MESH_ID
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> cluster.local
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> TRUST_DOMAIN
+              <span class="token key atrule">value</span><span class="token punctuation">:</span> cluster.local
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> DNS_AGENT
+          <span class="token key atrule">image</span><span class="token punctuation">:</span> docker.io/istio/proxyv2<span class="token punctuation">:</span>1.8.1
+          <span class="token key atrule">imagePullPolicy</span><span class="token punctuation">:</span> Always
+          <span class="token key atrule">name</span><span class="token punctuation">:</span> istio<span class="token punctuation">-</span>proxy
+          <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+            <span class="token punctuation">-</span> <span class="token key atrule">containerPort</span><span class="token punctuation">:</span> <span class="token number">15090</span>
+              <span class="token key atrule">name</span><span class="token punctuation">:</span> http<span class="token punctuation">-</span>envoy<span class="token punctuation">-</span>prom
+              <span class="token key atrule">protocol</span><span class="token punctuation">:</span> TCP
+          <span class="token key atrule">readinessProbe</span><span class="token punctuation">:</span>
+            <span class="token key atrule">failureThreshold</span><span class="token punctuation">:</span> <span class="token number">30</span>
+            <span class="token key atrule">httpGet</span><span class="token punctuation">:</span>
+              <span class="token key atrule">path</span><span class="token punctuation">:</span> /healthz/ready
+              <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">15021</span>
+            <span class="token key atrule">initialDelaySeconds</span><span class="token punctuation">:</span> <span class="token number">1</span>
+            <span class="token key atrule">periodSeconds</span><span class="token punctuation">:</span> <span class="token number">2</span>
+            <span class="token key atrule">timeoutSeconds</span><span class="token punctuation">:</span> <span class="token number">3</span>
+          <span class="token key atrule">resources</span><span class="token punctuation">:</span>
+            <span class="token key atrule">limits</span><span class="token punctuation">:</span>
+              <span class="token key atrule">cpu</span><span class="token punctuation">:</span> <span class="token string">&quot;2&quot;</span>
+              <span class="token key atrule">memory</span><span class="token punctuation">:</span> 1Gi
+            <span class="token key atrule">requests</span><span class="token punctuation">:</span>
+              <span class="token key atrule">cpu</span><span class="token punctuation">:</span> 10m
+              <span class="token key atrule">memory</span><span class="token punctuation">:</span> 40Mi
+          <span class="token key atrule">securityContext</span><span class="token punctuation">:</span>
+            <span class="token key atrule">allowPrivilegeEscalation</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+            <span class="token key atrule">capabilities</span><span class="token punctuation">:</span>
+              <span class="token key atrule">drop</span><span class="token punctuation">:</span>
+                <span class="token punctuation">-</span> ALL
+            <span class="token key atrule">privileged</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+            <span class="token key atrule">readOnlyRootFilesystem</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+            <span class="token key atrule">runAsGroup</span><span class="token punctuation">:</span> <span class="token number">1337</span>
+            <span class="token key atrule">runAsNonRoot</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+            <span class="token key atrule">runAsUser</span><span class="token punctuation">:</span> <span class="token number">1337</span>
+          <span class="token key atrule">volumeMounts</span><span class="token punctuation">:</span>
+            <span class="token punctuation">-</span> <span class="token key atrule">mountPath</span><span class="token punctuation">:</span> /var/run/secrets/istio
+              <span class="token key atrule">name</span><span class="token punctuation">:</span> istiod<span class="token punctuation">-</span>ca<span class="token punctuation">-</span>cert
+            <span class="token punctuation">-</span> <span class="token key atrule">mountPath</span><span class="token punctuation">:</span> /var/lib/istio/data
+              <span class="token key atrule">name</span><span class="token punctuation">:</span> istio<span class="token punctuation">-</span>data
+            <span class="token punctuation">-</span> <span class="token key atrule">mountPath</span><span class="token punctuation">:</span> /etc/istio/proxy
+              <span class="token key atrule">name</span><span class="token punctuation">:</span> istio<span class="token punctuation">-</span>envoy
+            <span class="token punctuation">-</span> <span class="token key atrule">mountPath</span><span class="token punctuation">:</span> /var/run/secrets/tokens
+              <span class="token key atrule">name</span><span class="token punctuation">:</span> istio<span class="token punctuation">-</span>token
+            <span class="token punctuation">-</span> <span class="token key atrule">mountPath</span><span class="token punctuation">:</span> /etc/istio/pod
+              <span class="token key atrule">name</span><span class="token punctuation">:</span> istio<span class="token punctuation">-</span>podinfo
+      <span class="token key atrule">initContainers</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">args</span><span class="token punctuation">:</span>
+            <span class="token punctuation">-</span> istio<span class="token punctuation">-</span>iptables
+            <span class="token punctuation">-</span> <span class="token punctuation">-</span>p
+            <span class="token punctuation">-</span> <span class="token string">&quot;15001&quot;</span>
+            <span class="token punctuation">-</span> <span class="token punctuation">-</span>z
+            <span class="token punctuation">-</span> <span class="token string">&quot;15006&quot;</span>
+            <span class="token punctuation">-</span> <span class="token punctuation">-</span>u
+            <span class="token punctuation">-</span> <span class="token string">&quot;1337&quot;</span>
+            <span class="token punctuation">-</span> <span class="token punctuation">-</span>m
+            <span class="token punctuation">-</span> REDIRECT
+            <span class="token punctuation">-</span> <span class="token punctuation">-</span>i
+            <span class="token punctuation">-</span> <span class="token string">&quot;*&quot;</span>
+            <span class="token punctuation">-</span> <span class="token punctuation">-</span>x
+            <span class="token punctuation">-</span> <span class="token string">&quot;&quot;</span>
+            <span class="token punctuation">-</span> <span class="token punctuation">-</span>b
+            <span class="token punctuation">-</span> <span class="token string">&quot;*&quot;</span>
+            <span class="token punctuation">-</span> <span class="token punctuation">-</span>d
+            <span class="token punctuation">-</span> <span class="token number">15090</span><span class="token punctuation">,</span><span class="token number">15021</span><span class="token punctuation">,</span><span class="token number">15020</span>
+          <span class="token key atrule">env</span><span class="token punctuation">:</span>
+            <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> DNS_AGENT
+          <span class="token key atrule">image</span><span class="token punctuation">:</span> docker.io/istio/proxyv2<span class="token punctuation">:</span>1.8.1
+          <span class="token key atrule">imagePullPolicy</span><span class="token punctuation">:</span> Always
+          <span class="token key atrule">name</span><span class="token punctuation">:</span> istio<span class="token punctuation">-</span>init
+          <span class="token key atrule">resources</span><span class="token punctuation">:</span>
+            <span class="token key atrule">limits</span><span class="token punctuation">:</span>
+              <span class="token key atrule">cpu</span><span class="token punctuation">:</span> <span class="token string">&quot;2&quot;</span>
+              <span class="token key atrule">memory</span><span class="token punctuation">:</span> 1Gi
+            <span class="token key atrule">requests</span><span class="token punctuation">:</span>
+              <span class="token key atrule">cpu</span><span class="token punctuation">:</span> 10m
+              <span class="token key atrule">memory</span><span class="token punctuation">:</span> 40Mi
+          <span class="token key atrule">securityContext</span><span class="token punctuation">:</span>
+            <span class="token key atrule">allowPrivilegeEscalation</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+            <span class="token key atrule">capabilities</span><span class="token punctuation">:</span>
+              <span class="token key atrule">add</span><span class="token punctuation">:</span>
+                <span class="token punctuation">-</span> NET_ADMIN
+                <span class="token punctuation">-</span> NET_RAW
+              <span class="token key atrule">drop</span><span class="token punctuation">:</span>
+                <span class="token punctuation">-</span> ALL
+            <span class="token key atrule">privileged</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+            <span class="token key atrule">readOnlyRootFilesystem</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+            <span class="token key atrule">runAsGroup</span><span class="token punctuation">:</span> <span class="token number">0</span>
+            <span class="token key atrule">runAsNonRoot</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+            <span class="token key atrule">runAsUser</span><span class="token punctuation">:</span> <span class="token number">0</span>
+      <span class="token key atrule">securityContext</span><span class="token punctuation">:</span>
+        <span class="token key atrule">fsGroup</span><span class="token punctuation">:</span> <span class="token number">1337</span>
+      <span class="token key atrule">serviceAccountName</span><span class="token punctuation">:</span> default
+      <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">emptyDir</span><span class="token punctuation">:</span>
+            <span class="token key atrule">medium</span><span class="token punctuation">:</span> Memory
+          <span class="token key atrule">name</span><span class="token punctuation">:</span> istio<span class="token punctuation">-</span>envoy
+        <span class="token punctuation">-</span> <span class="token key atrule">emptyDir</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+          <span class="token key atrule">name</span><span class="token punctuation">:</span> istio<span class="token punctuation">-</span>data
+        <span class="token punctuation">-</span> <span class="token key atrule">downwardAPI</span><span class="token punctuation">:</span>
+            <span class="token key atrule">items</span><span class="token punctuation">:</span>
+              <span class="token punctuation">-</span> <span class="token key atrule">fieldRef</span><span class="token punctuation">:</span>
+                  <span class="token key atrule">fieldPath</span><span class="token punctuation">:</span> metadata.labels
+                <span class="token key atrule">path</span><span class="token punctuation">:</span> labels
+              <span class="token punctuation">-</span> <span class="token key atrule">fieldRef</span><span class="token punctuation">:</span>
+                  <span class="token key atrule">fieldPath</span><span class="token punctuation">:</span> metadata.annotations
+                <span class="token key atrule">path</span><span class="token punctuation">:</span> annotations
+          <span class="token key atrule">name</span><span class="token punctuation">:</span> istio<span class="token punctuation">-</span>podinfo
+        <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> istio<span class="token punctuation">-</span>token
+          <span class="token key atrule">projected</span><span class="token punctuation">:</span>
+            <span class="token key atrule">sources</span><span class="token punctuation">:</span>
+              <span class="token punctuation">-</span> <span class="token key atrule">serviceAccountToken</span><span class="token punctuation">:</span>
+                  <span class="token key atrule">audience</span><span class="token punctuation">:</span> istio<span class="token punctuation">-</span>ca
+                  <span class="token key atrule">expirationSeconds</span><span class="token punctuation">:</span> <span class="token number">43200</span>
+                  <span class="token key atrule">path</span><span class="token punctuation">:</span> istio<span class="token punctuation">-</span>token
+        <span class="token punctuation">-</span> <span class="token key atrule">configMap</span><span class="token punctuation">:</span>
+            <span class="token key atrule">name</span><span class="token punctuation">:</span> istio<span class="token punctuation">-</span>ca<span class="token punctuation">-</span>root<span class="token punctuation">-</span>cert
+          <span class="token key atrule">name</span><span class="token punctuation">:</span> istiod<span class="token punctuation">-</span>ca<span class="token punctuation">-</span>cert
+<span class="token key atrule">status</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+</code></pre></div></li></ul> <p>As you can see, the service is modified deeply adding a lot new stuff. Next, We will learn what Istio does.</p> <h2 id="_4-sidecar-injection"><a href="#_4-sidecar-injection" class="header-anchor">#</a> 4. Sidecar injection</h2> <p>In simple terms, sidecar injection is adding the configuration of additional containers to the pod template. The added containers needed for the Istio service mesh are:</p> <p><code>istio-init</code> This init container is used to setup the iptables rules so that inbound/outbound traffic will go through the sidecar proxy. An init container is different than an app container in following ways:</p> <ul><li>It runs before an app container is started and it always runs to completion.</li> <li>If there are many init containers, each should complete with success before the next container is started.</li></ul> <p>So, you can see how this type of container is perfect for a set-up or initialization job which does not need to be a part of the actual application container. In this case, istio-init does just that and sets up the iptables rules.</p> <p><code>istio-proxy</code> This is the actual sidecar proxy (based on Envoy).</p> <h3 id="_4-1-automatic-injection"><a href="#_4-1-automatic-injection" class="header-anchor">#</a> 4.1 Automatic injection</h3> <p>Most of the times, you don’t want to manually inject a sidecar every time you deploy an application, using the <code>istioctl</code> command, but would prefer that Istio automatically inject the sidecar to your pod. This is the recommended approach and for it to work, all you need to do is to label the namespace where you are deploying the app with istio-injection=enabled.</p> <p>Once labeled, Istio injects the sidecar automatically for any pod you deploy in that namespace. In the following example, the sidecar gets automatically injected in the deployed pods in the istio-dev namespace.</p> <h2 id="_5-deploying-microservices-demo-with-istio"><a href="#_5-deploying-microservices-demo-with-istio" class="header-anchor">#</a> 5. Deploying microservices-demo with Istio</h2> <ol><li><p>Deploy the application:</p> <div class="language-sh extra-class"><pre class="language-sh"><code>istioctl kube-inject -f ./release/kubernetes-manifests.yaml <span class="token operator">|</span> kubectl apply -f -
+</code></pre></div></li> <li><p>Run to see pods are in a Ready state:</p> <div class="language-sh extra-class"><pre class="language-sh"><code>kubectl get pods
+</code></pre></div></li></ol> <h2 id="_6-adding-external-https-connectivity-through-istio"><a href="#_6-adding-external-https-connectivity-through-istio" class="header-anchor">#</a> 6. Adding external HTTPS connectivity through Istio</h2> <p>Istio by default is high secure, so no connectivity is added if you do not say so. Now, we will deploy a new manifest adding connectivity services through Istio:</p> <ul><li><p><a href="../istio-micro-services-networking.yaml">istio-micro-services-networking.yaml</a>:</p> <div class="language-yaml extra-class"><pre class="language-yaml"><code><span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> networking.istio.io/v1alpha3
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Gateway
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+    <span class="token key atrule">name</span><span class="token punctuation">:</span> frontend<span class="token punctuation">-</span>gateway
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+    <span class="token key atrule">selector</span><span class="token punctuation">:</span>
+        <span class="token key atrule">istio</span><span class="token punctuation">:</span> ingressgateway <span class="token comment"># use Istio default gateway implementation</span>
+    <span class="token key atrule">servers</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">port</span><span class="token punctuation">:</span>
+              <span class="token key atrule">number</span><span class="token punctuation">:</span> <span class="token number">80</span>
+              <span class="token key atrule">name</span><span class="token punctuation">:</span> http
+              <span class="token key atrule">protocol</span><span class="token punctuation">:</span> HTTP
+          <span class="token key atrule">hosts</span><span class="token punctuation">:</span>
+              <span class="token punctuation">-</span> <span class="token string">&quot;*&quot;</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">port</span><span class="token punctuation">:</span>
+              <span class="token key atrule">number</span><span class="token punctuation">:</span> <span class="token number">443</span>
+              <span class="token key atrule">name</span><span class="token punctuation">:</span> https
+              <span class="token key atrule">protocol</span><span class="token punctuation">:</span> HTTPS
+          <span class="token key atrule">tls</span><span class="token punctuation">:</span>
+              <span class="token key atrule">mode</span><span class="token punctuation">:</span> SIMPLE
+              <span class="token key atrule">credentialName</span><span class="token punctuation">:</span> microservices<span class="token punctuation">-</span>demo<span class="token punctuation">-</span>credential <span class="token comment"># must be the same as secret</span>
+          <span class="token key atrule">hosts</span><span class="token punctuation">:</span>
+              <span class="token punctuation">-</span> microservices<span class="token punctuation">-</span>demo.example.com
+<span class="token punctuation">---</span>
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> networking.istio.io/v1alpha3
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> VirtualService
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+    <span class="token key atrule">name</span><span class="token punctuation">:</span> frontend<span class="token punctuation">-</span>ingress
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+    <span class="token key atrule">hosts</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token string">&quot;*&quot;</span>
+    <span class="token key atrule">gateways</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> frontend<span class="token punctuation">-</span>gateway
+    <span class="token key atrule">http</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">route</span><span class="token punctuation">:</span>
+              <span class="token punctuation">-</span> <span class="token key atrule">destination</span><span class="token punctuation">:</span>
+                    <span class="token key atrule">host</span><span class="token punctuation">:</span> frontend
+                    <span class="token key atrule">port</span><span class="token punctuation">:</span>
+                        <span class="token key atrule">number</span><span class="token punctuation">:</span> <span class="token number">80</span>
+<span class="token punctuation">---</span>
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> networking.istio.io/v1alpha3
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> VirtualService
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+    <span class="token key atrule">name</span><span class="token punctuation">:</span> frontend
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+    <span class="token key atrule">hosts</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token string">&quot;frontend.default.svc.cluster.local&quot;</span>
+    <span class="token key atrule">http</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">route</span><span class="token punctuation">:</span>
+              <span class="token punctuation">-</span> <span class="token key atrule">destination</span><span class="token punctuation">:</span>
+                    <span class="token key atrule">host</span><span class="token punctuation">:</span> frontend
+                    <span class="token key atrule">port</span><span class="token punctuation">:</span>
+                        <span class="token key atrule">number</span><span class="token punctuation">:</span> <span class="token number">80</span>
+<span class="token punctuation">---</span>
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> networking.istio.io/v1alpha3
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> ServiceEntry
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+    <span class="token key atrule">name</span><span class="token punctuation">:</span> whitelist<span class="token punctuation">-</span>egress<span class="token punctuation">-</span>googleapis
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+    <span class="token key atrule">hosts</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token string">&quot;accounts.google.com&quot;</span> <span class="token comment"># Used to get token</span>
+        <span class="token punctuation">-</span> <span class="token string">&quot;*.googleapis.com&quot;</span>
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">number</span><span class="token punctuation">:</span> <span class="token number">80</span>
+          <span class="token key atrule">protocol</span><span class="token punctuation">:</span> HTTP
+          <span class="token key atrule">name</span><span class="token punctuation">:</span> http
+        <span class="token punctuation">-</span> <span class="token key atrule">number</span><span class="token punctuation">:</span> <span class="token number">443</span>
+          <span class="token key atrule">protocol</span><span class="token punctuation">:</span> HTTPS
+          <span class="token key atrule">name</span><span class="token punctuation">:</span> https
+<span class="token punctuation">---</span>
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> networking.istio.io/v1alpha3
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> ServiceEntry
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+    <span class="token key atrule">name</span><span class="token punctuation">:</span> whitelist<span class="token punctuation">-</span>egress<span class="token punctuation">-</span>google<span class="token punctuation">-</span>metadata
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+    <span class="token key atrule">hosts</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> metadata.google.internal
+    <span class="token key atrule">addresses</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> 169.254.169.254 <span class="token comment"># GCE metadata server</span>
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">number</span><span class="token punctuation">:</span> <span class="token number">80</span>
+          <span class="token key atrule">name</span><span class="token punctuation">:</span> http
+          <span class="token key atrule">protocol</span><span class="token punctuation">:</span> HTTP
+        <span class="token punctuation">-</span> <span class="token key atrule">number</span><span class="token punctuation">:</span> <span class="token number">443</span>
+          <span class="token key atrule">name</span><span class="token punctuation">:</span> https
+          <span class="token key atrule">protocol</span><span class="token punctuation">:</span> HTTPS
+<span class="token punctuation">---</span>
+
+</code></pre></div></li></ul> <ol><li><p>Download <a href="../istio-micro-services-networking.yaml">istio-micro-services-networking.yaml</a>.</p></li> <li><p>Create certificate for the gateway and its custom domain:</p> <div class="language-sh extra-class"><pre class="language-sh"><code>openssl req -x509 -sha256 -nodes -days <span class="token number">365</span> -newkey rsa:2048 -subj <span class="token string">'/O=example Inc./CN=example.com'</span> -keyout example.com.key -out example.com.crt
+openssl req -out microservices-demo.example.com.csr -newkey rsa:2048 -nodes -keyout microservices-demo.example.com.key -subj <span class="token string">&quot;/CN=microservices-demo.example.com/O=microservices-demo organization&quot;</span>
+openssl x509 -req -days <span class="token number">365</span> -CA example.com.crt -CAkey example.com.key -set_serial <span class="token number">0</span> -in microservices-demo.example.com.csr -out microservices-demo.example.com.crt
+</code></pre></div></li> <li><p>Upload certificate to kubernetes:</p> <div class="language-sh extra-class"><pre class="language-sh"><code>kubectl create -n istio-system secret tls microservices-demo-credential --key<span class="token operator">=</span>microservices-demo.example.com.key --cert<span class="token operator">=</span>microservices-demo.example.com.crt
+</code></pre></div></li> <li><p>Deploy necessary gateway, ingress and egress services for the application:</p> <div class="language-sh extra-class"><pre class="language-sh"><code>kubectl apply -f istio-micro-services-networking.yaml
+</code></pre></div></li> <li><p>Ensure that there are no issues with the configuration:</p> <div class="language-sh extra-class"><pre class="language-sh"><code>istioctl analyze
+</code></pre></div></li></ol> <h3 id="_6-1-determining-the-application-url"><a href="#_6-1-determining-the-application-url" class="header-anchor">#</a> 6.1 Determining the application URL</h3> <p>As in the previous laboratory, we will have to obtain the URL for accessing the application:</p> <ol><li><p>Obtain host and ports:</p> <div class="language-sh extra-class"><pre class="language-sh"><code><span class="token builtin class-name">export</span> <span class="token assign-left variable">INGRESS_PORT</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span>kubectl -n istio-system get <span class="token function">service</span> istio-ingressgateway -o <span class="token assign-left variable">jsonpath</span><span class="token operator">=</span><span class="token string">'{.spec.ports[?(.name==&quot;http2&quot;)].nodePort}'</span><span class="token variable">)</span></span>
+<span class="token builtin class-name">export</span> <span class="token assign-left variable">SECURE_INGRESS_PORT</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span>kubectl -n istio-system get <span class="token function">service</span> istio-ingressgateway -o <span class="token assign-left variable">jsonpath</span><span class="token operator">=</span><span class="token string">'{.spec.ports[?(.name==&quot;https&quot;)].nodePort}'</span><span class="token variable">)</span></span>
+<span class="token builtin class-name">export</span> <span class="token assign-left variable">INGRESS_HOST</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span>minikube <span class="token function">ip</span><span class="token variable">)</span></span>
+<span class="token builtin class-name">export</span> <span class="token assign-left variable">GATEWAY_URL</span><span class="token operator">=</span>microservices-demo.example.com:<span class="token variable">$SECURE_INGRESS_PORT</span>
+</code></pre></div></li> <li><p>Add <code>microservices-demo.example.com</code> to <code>/etc/hosts</code>:</p> <div class="language-sh extra-class"><pre class="language-sh"><code><span class="token function">sudo</span> <span class="token function">bash</span> -c <span class="token string">&quot;echo '<span class="token variable">$INGRESS_HOST</span> microservices-demo.example.com ' &gt;&gt; /etc/hosts&quot;</span>
+</code></pre></div></li> <li><p>Run the following command to retrieve the external address of the application.</p> <div class="language-sh extra-class"><pre class="language-sh"><code><span class="token builtin class-name">echo</span> https://<span class="token string">&quot;<span class="token variable">$GATEWAY_URL</span>&quot;</span>
+</code></pre></div></li> <li><p>Access the app using precious URL:</p> <p><img src="/istio-workshop/assets/img/microservices-demo-screenshot.17972aca.png" alt="Microservices Demo with HTTPS"></p></li></ol> <h2 id="_7-checking-services-using-the-istio-dashboard"><a href="#_7-checking-services-using-the-istio-dashboard" class="header-anchor">#</a> 7. Checking services using the Istio dashboard</h2> <p>Now, it is time to visually review what is deployed in Istio:</p> <ol><li><p>Access the Kiali dashboard. The default user name is <code>admin</code> and default password is <code>admin</code>.</p> <div class="language-sh extra-class"><pre class="language-sh"><code>istioctl dashboard kiali
+</code></pre></div></li> <li><p>In the left navigation menu, select <em>Graph</em> and in the <em>Namespace</em> drop down, select <em>default</em>.</p> <p>The Kiali dashboard shows an overview of your mesh with the relationships between the services in the <code>Microservices Demo</code> sample application. It also provides filters to visualize the traffic flow.</p> <p><img src="/istio-workshop/assets/img/graph-screenshot.d94e85fd.png" alt="Kiali Dashboard"></p></li></ol> <h2 id="_8-removing-resources"><a href="#_8-removing-resources" class="header-anchor">#</a> 8. Removing resources</h2> <ol><li><p>Remove line that contains <code>microservices-demo.example.com</code> in <code>/etc/hosts</code>:</p> <div class="language-sh extra-class"><pre class="language-sh"><code><span class="token function">sudo</span> <span class="token function">sed</span> -i <span class="token string">'/microservices-demo.example.com/d'</span> /etc/hosts
+</code></pre></div></li> <li><p>Remove created resources:</p> <div class="language-sh extra-class"><pre class="language-sh"><code>kubectl delete -f istio-micro-services-networking.yaml
+istioctl kube-inject -f ./release/kubernetes-manifests.yaml <span class="token operator">|</span> kubectl delete -f -
+</code></pre></div></li></ol></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/istio-workshop/laboratory-02/" class="prev">
+        Lab 2 - Installing Istio
+      </a></span> <span class="next"><a href="/istio-workshop/laboratory-04/">
+        Lab 4 - Traffic Management
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----></div></div>
+    <script src="/istio-workshop/assets/js/app.3b9c719d.js" defer></script><script src="/istio-workshop/assets/js/2.0a1165e1.js" defer></script><script src="/istio-workshop/assets/js/6.59ae5067.js" defer></script>
+  </body>
+</html>
