@@ -1,3 +1,8 @@
+---
+title: Lab 4 - Traffic Management
+image: /istio_practice_preview.png
+---
+
 # Lab 4 - Traffic Management
 
 In the last laboratory, we will explore an advanced feature of Istio called [Traffic Management](https://istio.io/latest/docs/tasks/traffic-management/). Thanks to it, Istio will help you managing the traffic of our microservices very easily.

@@ -1,3 +1,8 @@
+---
+title: Lab 1 - Installing Minkube
+image: /istio_practice_preview.png
+---
+
 # Lab 1 - Installing Minkube
 
 The first laboratory of the workshop consist of launching a Kubernetes cluster in our local machine. In order to achieve that, we will use [minikube](https://kubernetes.io/docs/tutorials/hello-minikube/) that eases a lot this task.

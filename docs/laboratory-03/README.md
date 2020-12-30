@@ -1,3 +1,8 @@
+---
+title: Lab 3 - Integrating an app
+image: /istio_practice_preview.png
+---
+
 # Lab 3 - Integrating an app
 
 In this laboratory, we will learn how to modify our application in order to work with Istio. For that purpose, we will use the [Online Boutique](https://github.com/GoogleCloudPlatform/microservices-demo) a sample microservices application provided by Google.

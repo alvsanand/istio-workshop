@@ -1,8 +1,13 @@
 const path = require("path");
 
+const domain = 'https://alvsanand.github.io/istio-workshop';
+const title = 'Istio Workshop';
+const description = title;
+const author = 'alvsanand';
+
 module.exports = {
-    title: "Istio Workshop",
-    description: "Istio Workshop",
+    title: title,
+    description: title,
     base: '/istio-workshop/',
     head: [
         ['link', { rel: "icon", href: "/favicon.ico" }]
@@ -12,14 +17,15 @@ module.exports = {
         lastUpdated: false,
         docsDir: 'docs',
         editLinks: false,
+        domain: domain,
         logo: '/istio_practice.png',
         nav: [
             { text: 'Home', link: '/' },
             {
-                text: '@alvsanand',
+                text: '@' + author,
                 items: [
-                    { text: 'Github', link: 'https://github.com/alvsanand' },
-                    { text: 'LinekdIn', link: 'https://www.linkedin.com/in/alvsanand/' },
+                    { text: 'Github', link: 'https://github.com/' + author },
+                    { text: 'LinekdIn', link: 'https://www.linkedin.com/in/' + author },
                 ]
             },
             { text: 'Bluetab', link: 'https://bluetab.net/' },

@@ -1,3 +1,8 @@
+---
+title: Technical Overview
+image: /istio_practice_preview.png
+---
+
 # Technical Overview
 
 Before beginning with the practice labs, it is is very advisable to explain a brief technical overview of Istio.

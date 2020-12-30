@@ -1,3 +1,8 @@
+---
+title: Lab 2 - Installing Istio
+image: /istio_practice_preview.png
+---
+
 # Lab 2 - Installing Istio
 
 In the second laboratory of the workshop, we will install and configure Istio as in its [getting-started](https://istio.io/latest/docs/setup/getting-started/) tutorial.
