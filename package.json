@@ -1,10 +1,10 @@
 {
     "name": "istio-workshop",
     "version": "1.0.0",
-    "description": "Istio Workshop by Bluetab Cloud Practice.",
+    "description": "Istio Workshop",
     "main": "index.js",
-    "author": "samdbeckham",
-    "license": "MIT",
+    "author": "alvsanand",
+    "license": "Apache",
     "private": false,
     "scripts": {
         "start": "vuepress dev docs",
@@ -12,6 +12,13 @@
     },
     "dependencies": {},
     "devDependencies": {
-        "vuepress": "^0.10.0"
+        "@vuepress/plugin-back-to-top": "^1.7.1",
+        "@vuepress/plugin-medium-zoom": "^1.7.1",
+        "mermaid": "^8.8.4",
+        "nunjucks": "^3.2.2",
+        "vue-tabs-component": "^1.5.0",
+        "vuepress": "^1.7.1",
+        "vuepress-plugin-element-tabs": "^0.2.8",
+        "vuepress-plugin-seo": "^0.1.4"
     }
 }
